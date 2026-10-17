@@ -1,0 +1,17 @@
+{
+ "micro_f1": 0.6617,
+ "macro_f1": 0.6395,
+ "per_class": {
+  "Casualties": 0.627,
+  "Displacement": 0.745,
+  "Shock/Event": 0.592,
+  "Humanitarian Access": 0.593
+ },
+ "thresholds": {
+  "Casualties": 0.55,
+  "Displacement": 0.6,
+  "Shock/Event": 0.5,
+  "Humanitarian Access": 0.7
+ },
+ "n_train": 43719
+}

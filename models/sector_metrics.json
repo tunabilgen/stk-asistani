@@ -1,0 +1,239 @@
+{
+ "trained_at": "2026-10-16T07:24:30.674957+00:00",
+ "n_train": 90127,
+ "n_extra": 567,
+ "n_test": 12384,
+ "results": [
+  {
+   "model": "keyword baseline",
+   "micro_f1": 0.5578,
+   "macro_f1": 0.5392,
+   "per_class": {
+    "food": {
+     "precision": 0.484,
+     "recall": 0.756,
+     "f1": 0.59,
+     "support": 1522
+    },
+    "health": {
+     "precision": 0.794,
+     "recall": 0.592,
+     "f1": 0.678,
+     "support": 3614
+    },
+    "wash": {
+     "precision": 0.565,
+     "recall": 0.833,
+     "f1": 0.674,
+     "support": 1101
+    },
+    "shelter": {
+     "precision": 0.267,
+     "recall": 0.688,
+     "f1": 0.384,
+     "support": 929
+    },
+    "education": {
+     "precision": 0.706,
+     "recall": 0.848,
+     "f1": 0.77,
+     "support": 1120
+    },
+    "protection": {
+     "precision": 0.489,
+     "recall": 0.507,
+     "f1": 0.498,
+     "support": 2562
+    },
+    "nutrition": {
+     "precision": 0.751,
+     "recall": 0.745,
+     "f1": 0.748,
+     "support": 608
+    },
+    "livelihoods": {
+     "precision": 0.611,
+     "recall": 0.412,
+     "f1": 0.492,
+     "support": 1695
+    },
+    "agriculture": {
+     "precision": 0.391,
+     "recall": 0.447,
+     "f1": 0.417,
+     "support": 403
+    },
+    "logistics": {
+     "precision": 0.082,
+     "recall": 0.504,
+     "f1": 0.141,
+     "support": 254
+    }
+   }
+  },
+  {
+   "model": "tfidf+logreg (t=0.5)",
+   "micro_f1": 0.7793,
+   "macro_f1": 0.7439,
+   "per_class": {
+    "food": {
+     "precision": 0.762,
+     "recall": 0.84,
+     "f1": 0.799,
+     "support": 1522
+    },
+    "health": {
+     "precision": 0.848,
+     "recall": 0.843,
+     "f1": 0.846,
+     "support": 3614
+    },
+    "wash": {
+     "precision": 0.8,
+     "recall": 0.852,
+     "f1": 0.825,
+     "support": 1101
+    },
+    "shelter": {
+     "precision": 0.757,
+     "recall": 0.783,
+     "f1": 0.769,
+     "support": 929
+    },
+    "education": {
+     "precision": 0.801,
+     "recall": 0.869,
+     "f1": 0.834,
+     "support": 1120
+    },
+    "protection": {
+     "precision": 0.728,
+     "recall": 0.795,
+     "f1": 0.76,
+     "support": 2562
+    },
+    "nutrition": {
+     "precision": 0.79,
+     "recall": 0.824,
+     "f1": 0.807,
+     "support": 608
+    },
+    "livelihoods": {
+     "precision": 0.629,
+     "recall": 0.719,
+     "f1": 0.671,
+     "support": 1695
+    },
+    "agriculture": {
+     "precision": 0.562,
+     "recall": 0.677,
+     "f1": 0.614,
+     "support": 403
+    },
+    "logistics": {
+     "precision": 0.481,
+     "recall": 0.551,
+     "f1": 0.514,
+     "support": 254
+    }
+   }
+  },
+  {
+   "model": "tfidf+logreg (tuned t)",
+   "micro_f1": 0.7795,
+   "macro_f1": 0.7393,
+   "per_class": {
+    "food": {
+     "precision": 0.773,
+     "recall": 0.818,
+     "f1": 0.795,
+     "support": 1522
+    },
+    "health": {
+     "precision": 0.81,
+     "recall": 0.883,
+     "f1": 0.845,
+     "support": 3614
+    },
+    "wash": {
+     "precision": 0.8,
+     "recall": 0.852,
+     "f1": 0.825,
+     "support": 1101
+    },
+    "shelter": {
+     "precision": 0.768,
+     "recall": 0.749,
+     "f1": 0.759,
+     "support": 929
+    },
+    "education": {
+     "precision": 0.818,
+     "recall": 0.85,
+     "f1": 0.834,
+     "support": 1120
+    },
+    "protection": {
+     "precision": 0.728,
+     "recall": 0.795,
+     "f1": 0.76,
+     "support": 2562
+    },
+    "nutrition": {
+     "precision": 0.747,
+     "recall": 0.845,
+     "f1": 0.793,
+     "support": 608
+    },
+    "livelihoods": {
+     "precision": 0.658,
+     "recall": 0.687,
+     "f1": 0.672,
+     "support": 1695
+    },
+    "agriculture": {
+     "precision": 0.626,
+     "recall": 0.568,
+     "f1": 0.596,
+     "support": 403
+    },
+    "logistics": {
+     "precision": 0.531,
+     "recall": 0.5,
+     "f1": 0.515,
+     "support": 254
+    }
+   },
+   "thresholds": {
+    "food": 0.55,
+    "health": 0.4,
+    "wash": 0.5,
+    "shelter": 0.55,
+    "education": 0.55,
+    "protection": 0.5,
+    "nutrition": 0.4,
+    "livelihoods": 0.55,
+    "agriculture": 0.65,
+    "logistics": 0.6
+   }
+  }
+ ],
+ "by_language": {
+  "en": {
+   "n": 7501,
+   "micro_f1": 0.7963,
+   "macro_f1": 0.7462
+  },
+  "es": {
+   "n": 2292,
+   "micro_f1": 0.7363,
+   "macro_f1": 0.6212
+  },
+  "fr": {
+   "n": 2591,
+   "micro_f1": 0.7687,
+   "macro_f1": 0.714
+  }
+ },
+ "seconds": 48.0
+}

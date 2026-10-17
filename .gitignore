@@ -1,0 +1,26 @@
+# secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# local tooling
+.claude/
+
+# large or regenerable data (re-create with the commands in README)
+data/raw/humset/
+data/raw/indep/
+data/processed/
+data/feedback/
+models/*.joblib
+models/candidate*
+models/self_train_run*.txt
+
+# the final dataset IS committed: data/final/
+# the live news history (data/raw/live/) IS committed: it cannot be re-downloaded later
+
+# course documents (contain classmates' names and e-mails) - never publish
+*.docx

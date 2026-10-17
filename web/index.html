@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STK Asistanı</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23a3271f'/><path d='M9 21c4-8 10-8 14-10' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round'/></svg>">
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <span class="wordmark">STK Asistanı</span>
+    <span class="tag" data-i18n="tagline"></span>
+  </div>
+  <nav class="lens" aria-label="lens">
+    <button data-lens="priority" data-i18n="lensPriority"></button>
+    <button data-lens="silence" data-i18n="lensSilence"></button>
+    <button data-lens="trend" data-i18n="lensTrend"></button>
+  </nav>
+  <div class="top-right">
+    <span class="fresh" id="fresh"></span>
+    <button class="icon-btn" id="settingsBtn" aria-label="settings">
+      <svg viewBox="0 0 20 20" width="16" height="16"><path d="M3 5h9M15 5h2M3 10h3M9 10h8M3 15h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="13.5" cy="5" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7.5" cy="10" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="15.5" cy="15" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span data-i18n="settings"></span>
+    </button>
+    <button class="text-btn" id="langBtn" aria-label="language"></button>
+    <button class="icon-btn only" id="themeBtn" aria-label="theme">
+      <svg viewBox="0 0 20 20" width="16" height="16"><path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="app">
+  <aside class="side" id="side">
+    <div class="profile-line" id="profileLine"></div>
+    <div class="sector-row" id="sectorRow"></div>
+    <div class="tabs" role="tablist">
+      <button class="tab on" data-side="rank" data-i18n="tabRank"></button>
+      <button class="tab" data-side="news" data-i18n="tabNews"></button>
+    </div>
+    <p class="lens-note" id="lensNote"></p>
+    <ol class="rank" id="rank"></ol>
+    <ul class="newsfeed" id="newsfeed" hidden></ul>
+  </aside>
+
+  <section class="mapwrap">
+    <div id="map"></div>
+    <div class="map-tools">
+      <label class="tgl"><input type="checkbox" id="tEvents" checked><span data-i18n="layerEvents"></span></label>
+      <label class="tgl"><input type="checkbox" id="tIgnored" checked><span data-i18n="layerIgnored"></span></label>
+      <label class="tgl"><input type="checkbox" id="tGlobe"><span data-i18n="layerGlobe"></span></label>
+    </div>
+    <div class="legend">
+      <div class="legend-title" id="legendTitle"></div>
+      <div class="ramp"></div>
+      <div class="ramp-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+      <div class="legend-keys">
+        <span><i class="k-ignored"></i><span data-i18n="ignoredShort"></span></span>
+        <span><i class="k-excl"></i><span data-i18n="exclShort"></span></span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="dossier" id="dossier">
+    <div id="overview"></div>
+    <div id="detail" hidden></div>
+  </aside>
+</main>
+
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h2 data-i18n="settings"></h2>
+    <button class="icon-btn only" id="drawerClose" aria-label="close">✕</button>
+  </div>
+  <div class="drawer-body" id="settingsBody"></div>
+</aside>
+
+<div class="modal" id="campaignModal" hidden>
+  <article class="sheet">
+    <button class="icon-btn only close" id="closeModal" aria-label="close">✕</button>
+    <div id="campaignBody"></div>
+  </article>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
