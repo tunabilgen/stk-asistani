@@ -69,7 +69,7 @@ Flagged as ignored by Western media: Dem. Rep. Congo, Somalia, Sudan
 | news Western          |     177 |    0.7 |      0   |   3   |   27   |    6.5 |
 | IFRC funded %         |      76 |   79.9 |    100   |  28.9 |  100   |   -1.1 |
 
-→ Death counts are extremely right-skewed (skew > 5: a few countries hold most deaths). We still use a **linear per-capita** scale with a cap, because a log scale compressed an 84× gap between Palestine and Israel; the cap limits the influence of extreme values.
+→ Death counts are extremely right-skewed (skew > 5: a few countries hold most deaths). We still use a **linear per-capita** scale with a cap, because a log scale compressed a 100× gap between Palestine and Israel; the cap limits the influence of extreme values.
 
 ![component_correlation.png](figures/component_correlation.png)
 

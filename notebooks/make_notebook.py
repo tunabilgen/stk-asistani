@@ -229,7 +229,7 @@ md("""
 ## C2. Descriptive statistics, skewness and correlations
 
 Deaths are extremely right-skewed (a few countries hold most deaths). A log scale would tame the skew, but it compressed
-an 84-fold gap between Palestine and Israel into 100 vs 43. We therefore use a **linear per-capita scale with a cap**,
+a 100-fold gap between Palestine and Israel into 100 vs 43. We therefore use a **linear per-capita scale with a cap**,
 which keeps real proportions and limits the influence of extreme values.
 """)
 code("""
@@ -266,7 +266,7 @@ md("""
 | component | formula (0–1) |
 |---|---|
 | civilian harm | civilian deaths per 100k (3 years) / 200, capped |
-| conflict intensity | deaths per 100k (3 years) / 500, capped — **linear**: a log scale hid an 84× gap between Palestine and Israel |
+| conflict intensity | deaths per 100k (3 years) / 500, capped — **linear**: a log scale hid a 100× gap between Palestine and Israel |
 | hunger | GHI / 50, capped; Palestine (not in GHI): documented starvation deaths |
 | protracted suffering | ½ × worst civilian dimension (killed or starving) + ½ × weighted mean |
 | vulnerability | max(hunger level, ongoing violence) — a hazard in a state that copes alone counts 0 |

@@ -53,7 +53,7 @@ def build():
         df.loc["PSE", "gaza_killed_30d"] = gz["killed_30d"]
 
     n = pd.DataFrame(index=df.index)
-    # conflict intensity = deaths per 100,000 people, LINEAR scale (a log scale hid a 84x gap
+    # conflict intensity = deaths per 100,000 people, LINEAR scale (a log scale hid a 100x gap
     # between Palestine and Israel). 500 per 100k over 3 years = maximum.
     pop = df["pop_est"].where(df["pop_est"] > 0)
     # UCDP is global: a country without recorded events had zero recorded conflict deaths

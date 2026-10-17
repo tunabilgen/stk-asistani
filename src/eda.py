@@ -208,7 +208,7 @@ def descriptive():
     desc["skew"] = x.skew()
     lines.append(desc.round(1).to_markdown() + "\n")
     lines.append("→ Death counts are extremely right-skewed (skew > 5: a few countries hold most deaths). "
-                 "We still use a **linear per-capita** scale with a cap, because a log scale compressed an 84× gap "
+                 "We still use a **linear per-capita** scale with a cap, because a log scale compressed a 100× gap "
                  "between Palestine and Israel; the cap limits the influence of extreme values.\n")
     corr = d[[c for c in ["n_civilian_harm", "n_conflict", "n_hunger", "n_acute", "n_aid_gap", "n_att_indep",
                           "n_att_western", "n_prot"] if c in d.columns]].corr(method="spearman")
