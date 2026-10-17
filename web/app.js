@@ -150,12 +150,12 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 const S = {
-  lang: store.get("lang2", "tr"), theme: store.get("theme", "light"), lens: store.get("lens2", "priority"),
+  lang: store.get("lang2", "en"), theme: store.get("theme", "light"), lens: store.get("lens2", "priority"),
   sideTab: "rank", tab: "summary", data: null, byIso: {}, selected: null, scores: {}, rankPos: {},
   map: null, globe: false, llm: null,
   sectors: new Set(store.get("sectors2", ["food", "health", "shelter"])),
   w: { ...DEFAULT_W, ...store.get("weights", {}) },
-  profile: { name: "Örnek Derneği", home: "TUR", budget: "medium", radius: 2500, teams: [], excluded: ["ISR"],
+  profile: { name: "Example NGO", home: "TUR", budget: "medium", radius: 2500, teams: [], excluded: ["ISR"],
              ...store.get("profile", {}) },
 };
 const $ = (s, el = document) => el.querySelector(s);

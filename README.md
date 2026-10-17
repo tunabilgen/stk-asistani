@@ -10,6 +10,8 @@ results are shown on an interactive world map.
 
 ![flow](reports/figures/flow_diagram.png)
 
+> The interface opens in English; switch to Turkish with the **TR** button (top right). Campaign and project drafts follow the interface language.
+
 ## Source independence
 
 The project deliberately uses **no UN data**. Evidence comes from academic datasets, NGO indices,
