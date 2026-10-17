@@ -50,6 +50,8 @@ campaigns and local partnerships.<br>
 <b>SDG link:</b> SDG 17.17 (civil-society partnerships), SDG 16.1 (reduce violence and related deaths: conflict data
 drives priority), SDG 2.1 (end hunger), SDG 1.5 / 11.5 (disaster resilience); cross-cutting SDG 10 (no crisis left behind).</div>
 
+<figure><img src="../reports/figures/flow_diagram.png" style="max-width:100%"><figcaption>Fig. 0 — What the user puts in and what the tool produces.</figcaption></figure>
+
 <h2>3) Background</h2>
 <p>Turkish civil society has a long record of humanitarian work in Syria, Gaza, Sudan, Somalia, Afghanistan and in the
 2023 earthquakes. Most NGOs, however, are small. They lack analysts who can follow dozens of crises, so campaign
@@ -149,6 +151,11 @@ classifiers, never as evidence about where needs are.</p>
 funded. (iv) Among the highest-need crises, DR Congo, Somalia and Sudan receive no Western coverage at all in the sample period and are flagged as ignored. (v) HumSet annotations date mainly from 2019–2020
 (76% from 2020), so live 2026 news will drift; this motivates self-training. Caveat: the Western sample is still small
 (90 country-tagged items); it grows daily.</p>
+
+<p class="noind"><b>Descriptive statistics.</b> Deaths per 100k are extremely right-skewed (skew 11; median 0, max 1,622).
+A log scale would reduce the skew but compressed an 84-fold gap between Palestine and Israel, so a capped linear per-capita
+scale is used instead. Spearman correlations show one pair above |ρ| ≥ 0.85: civilian harm and conflict intensity (0.91).
+Both are kept on purpose, because they answer different questions (who is killed vs how many).</p>
 
 <h3>c) Modelling:</h3>
 <ol>

@@ -196,6 +196,42 @@ def live_and_scores():
     lines.append("Flagged as ignored by Western media: " + ", ".join(f["name"]) + "\n")
 
 
+def descriptive():
+    """Descriptive statistics, skewness and correlations of the final country dataset."""
+    lines.append("## 3b. Descriptive statistics and correlations (final dataset)\n")
+    d = pd.read_csv(ROOT / "data/final/country_crisis_dataset.csv").set_index("iso3")
+    cols = {"deaths_per100k_3y": "deaths /100k", "civilian_per100k_3y": "civilian deaths /100k",
+            "ghi_2026": "GHI 2026", "aid_per_person": "aid $/person in need", "news_independent": "news indep.",
+            "news_western": "news Western", "ifrc_funded_pct": "IFRC funded %"}
+    x = d[list(cols)].rename(columns=cols)
+    desc = x.describe().T[["count", "mean", "50%", "std", "max"]].rename(columns={"50%": "median"})
+    desc["skew"] = x.skew()
+    lines.append(desc.round(1).to_markdown() + "\n")
+    lines.append("→ Death counts are extremely right-skewed (skew > 5: a few countries hold most deaths). "
+                 "We still use a **linear per-capita** scale with a cap, because a log scale compressed an 84× gap "
+                 "between Palestine and Israel; the cap limits the influence of extreme values.\n")
+    corr = d[[c for c in ["n_civilian_harm", "n_conflict", "n_hunger", "n_acute", "n_aid_gap", "n_att_indep",
+                          "n_att_western", "n_prot"] if c in d.columns]].corr(method="spearman")
+    fig, ax = plt.subplots(figsize=(6.2, 5))
+    im = ax.imshow(corr, cmap="RdBu_r", vmin=-1, vmax=1)
+    lab = [c.replace("n_", "") for c in corr.columns]
+    ax.set_xticks(range(len(lab)), lab, rotation=45, ha="right")
+    ax.set_yticks(range(len(lab)), lab)
+    for i in range(len(lab)):
+        for j in range(len(lab)):
+            ax.text(j, i, f"{corr.iloc[i, j]:.2f}", ha="center", va="center", fontsize=7,
+                    color="white" if abs(corr.iloc[i, j]) > 0.6 else "black")
+    ax.set_title("Spearman correlation of score components")
+    fig.colorbar(im, ax=ax, shrink=0.8)
+    save(fig, "component_correlation.png")
+    high = [(a, b, corr.loc[a, b]) for i, a in enumerate(corr.columns) for b in corr.columns[i + 1:]
+            if abs(corr.loc[a, b]) >= 0.85 and "prot" not in (a + b)]
+    lines.append("Pairs with |ρ| ≥ 0.85 (excluding the composite): "
+                 + (", ".join(f"{a}–{b} {r:.2f}" for a, b, r in high) or "none") + ". "
+                 "Components carry distinct information, so all are kept; civilian harm and conflict are related "
+                 "by construction but answer different questions (who is killed vs how many).\n")
+
+
 def model():
     lines.append("## 4. Models\n")
     m = json.loads((ROOT / "models" / "sector_metrics.json").read_text())
@@ -221,9 +257,12 @@ def model():
 
 
 if __name__ == "__main__":
+    import sys
+    sys.stdout.reconfigure(encoding="utf-8")
     humset()
     independent()
     live_and_scores()
+    descriptive()
     model()
     (ROOT / "reports" / "eda_summary.md").write_text("\n".join(lines), encoding="utf-8")
     print("\n".join(lines))

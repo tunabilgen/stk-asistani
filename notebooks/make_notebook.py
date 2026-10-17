@@ -224,6 +224,41 @@ rule = {"ucdp_deaths_3y": "UCDP is global: no event = 0 recorded deaths",
 pd.DataFrame({"% missing": miss, "handling": pd.Series(rule)})
 """)
 
+# ---------------- C2. descriptive statistics & correlations
+md("""
+## C2. Descriptive statistics, skewness and correlations
+
+Deaths are extremely right-skewed (a few countries hold most deaths). A log scale would tame the skew, but it compressed
+an 84-fold gap between Palestine and Israel into 100 vs 43. We therefore use a **linear per-capita scale with a cap**,
+which keeps real proportions and limits the influence of extreme values.
+""")
+code("""
+cols = {"deaths_per100k_3y": "deaths /100k", "civilian_per100k_3y": "civilian deaths /100k", "ghi_2026": "GHI 2026",
+        "aid_per_person": "aid $/person in need", "news_independent": "news indep.", "news_western": "news Western"}
+x = final[list(cols)].rename(columns=cols)
+desc = x.describe().T[["count", "mean", "50%", "std", "max"]].rename(columns={"50%": "median"})
+desc["skew"] = x.skew()
+desc.round(1)
+""")
+code("""
+comp = ["n_civilian_harm", "n_conflict", "n_hunger", "n_acute", "n_aid_gap", "n_att_indep", "n_att_western"]
+corr = final[comp].corr(method="spearman")
+fig, ax = plt.subplots(figsize=(5.6, 4.6))
+im = ax.imshow(corr, cmap="RdBu_r", vmin=-1, vmax=1)
+ax.set_xticks(range(len(comp)), [c[2:] for c in comp], rotation=45, ha="right"); ax.set_yticks(range(len(comp)), [c[2:] for c in comp])
+for i in range(len(comp)):
+    for j in range(len(comp)):
+        ax.text(j, i, f"{corr.iloc[i, j]:.2f}", ha="center", va="center", fontsize=7)
+fig.colorbar(im, shrink=0.8); ax.set_title("Spearman correlation of score components")
+high = [(a, b, round(corr.loc[a, b], 2)) for i, a in enumerate(comp) for b in comp[i + 1:] if abs(corr.loc[a, b]) >= 0.85]
+print("pairs with |rho| >= 0.85:", high)
+""")
+md("""
+**Multicollinearity check.** Only civilian harm and conflict intensity exceed |ρ| ≥ 0.85. Both are kept on purpose: they
+answer different questions (*who* is killed vs *how many*). This difference separates combatant-heavy wars (Ukraine: 3% of
+recorded deaths are civilians) from violence that falls on civilians (Palestine, Sudan).
+""")
+
 # ---------------- D. normalisation & final dataset
 md("""
 ## D. Normalisation and the final dataset

@@ -27,9 +27,9 @@ Strongest co-occurrences: Agriculture→Food Security 29%; WASH→Health 28%; Ag
 |:-----------------------------------------------|-------:|------------:|:------------------------|
 | UCDP GED 26.1 + candidate 2026 (Uppsala Univ.) | 210115 |         109 | 2016 – 2026-08-31       |
 | Global Hunger Index 2026                       |    130 |         130 | 2021–2026 data          |
-| IFRC GO active appeals                         |    164 |          79 | active today            |
+| IFRC GO active appeals                         |    165 |          79 | active today            |
 | IFRC national societies                        |    220 |         220 | current                 |
-| Tech for Palestine (Gaza MoH daily)            |   1104 |           1 | 2023-10-07 – 2026-10-14 |
+| Tech for Palestine (Gaza MoH daily)            |   1105 |           1 | 2023-10-07 – 2026-10-15 |
 
 → **Coverage gaps**: GHI gives only provisional categories for Sudan, South Sudan, Yemen, Burundi (used at range midpoint) and does not cover Palestine (starvation deaths from Gaza MoH data used instead); GHI does not score every country (e.g. Palestine); UCDP codes Gaza events under Israel (we re-assign them by admin-1). Gaps are recorded in `data/known_gaps.json` and shown in the UI; missing data is never scored as 'no need'.
 
@@ -43,19 +43,37 @@ Strongest co-occurrences: Agriculture→Food Security 29%; WASH→Health 28%; Ag
 
 - GHI ≥ 20 (serious or worse): **44** countries; ≥ 35 (alarming): 8
 
-- IFRC active appeals: 164 (35 emergency appeals), requested CHF 2,236M, funded **51%**
+- IFRC active appeals: 165 (35 emergency appeals), requested CHF 2,236M, funded **51%**
 
 ## 3. News: independent vs Western coverage, and resulting scores
 
-- News items collected: **644** from 18 outlets (506 independent, 138 Western); 74% tagged with ≥1 country by the gazetteer.
+- News items collected: **941** from 18 outlets (754 independent, 187 Western); 74% tagged with ≥1 country by the gazetteer.
 
 ![attention_gap.png](figures/attention_gap.png)
 
-- The 15 highest-need countries receive **31%** of independent coverage but **9%** of Western coverage.
+- The 15 highest-need countries receive **29%** of independent coverage but **12%** of Western coverage.
 
 ![need_vs_attention.png](figures/need_vs_attention.png)
 
 Flagged as ignored by Western media: Dem. Rep. Congo, Somalia, Sudan
+
+## 3b. Descriptive statistics and correlations (final dataset)
+
+|                       |   count |   mean |   median |   std |    max |   skew |
+|:----------------------|--------:|-------:|---------:|------:|-------:|-------:|
+| deaths /100k          |     177 |   17.6 |      0   | 130.9 | 1621.7 |   11.1 |
+| civilian deaths /100k |     177 |    6.1 |      0   |  54.3 |  702.6 |   12.3 |
+| GHI 2026              |     127 |   15.4 |     12.9 |  11.4 |   47   |    0.8 |
+| aid $/person in need  |      18 |  154.2 |    115.8 | 146.6 |  535.6 |    1.4 |
+| news indep.           |     177 |    4.6 |      0   |  13.8 |  106   |    4.4 |
+| news Western          |     177 |    0.7 |      0   |   3   |   27   |    6.5 |
+| IFRC funded %         |      76 |   79.9 |    100   |  28.9 |  100   |   -1.1 |
+
+→ Death counts are extremely right-skewed (skew > 5: a few countries hold most deaths). We still use a **linear per-capita** scale with a cap, because a log scale compressed an 84× gap between Palestine and Israel; the cap limits the influence of extreme values.
+
+![component_correlation.png](figures/component_correlation.png)
+
+Pairs with |ρ| ≥ 0.85 (excluding the composite): n_civilian_harm–n_conflict 0.91. Components carry distinct information, so all are kept; civilian harm and conflict are related by construction but answer different questions (who is killed vs how many).
 
 ## 4. Models
 

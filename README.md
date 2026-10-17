@@ -8,6 +8,8 @@ partner. It reads independent data and news continuously, classifies them with s
 models, and ranks acute, protracted and under-reported crises against the NGO's own sectors. The
 results are shown on an interactive world map.
 
+![flow](reports/figures/flow_diagram.png)
+
 ## Source independence
 
 The project deliberately uses **no UN data**. Evidence comes from academic datasets, NGO indices,
@@ -90,6 +92,7 @@ and **0%** to Sudan, DR Congo, Somalia, Syria and Lebanon. See [reports/eda_summ
 ```bash
 pip install -r requirements.txt
 copy .env.example .env            # add an OpenRouter key for the LLM (optional)
+python -m src.download_humset      # training data (HumSet, ~125 MB)
 python -m src.ingest              # downloads all sources (~3 min)
 python -m src.sector_model train  # ~5 min
 python -m src.pillar_model train  # ~3 min
@@ -97,7 +100,6 @@ python -m src.build_dashboard
 python app.py                     # → http://localhost:8000
 ```
 
-HumSet must first be placed in `data/raw/humset/` (`train/validation/test.jsonl` from Hugging Face).
 For a daily refresh run `python update.py`; add `--full` once a week.
 
 **LLM:** any OpenAI-compatible endpoint. The default is OpenRouter with `deepseek/deepseek-v4.1-flash`
