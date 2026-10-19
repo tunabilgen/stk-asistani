@@ -21,7 +21,7 @@
   .two { display: flex; gap: 10pt; }
   .two figure { flex: 1; }
   .sig { text-align: right; font-weight: bold; margin-top: 18pt; line-height: 2; }
-  .box { border: 1px solid #999; padding: 6pt 9pt; margin: 6pt 0 8pt; font-size: 10.5pt; background: #fafafa; }
+  .box { border: 1px solid #999; padding: 6pt 9pt; margin: 6pt 0 8pt; font-size: 10.5pt; background: #fafafa; break-inside: avoid; }
   code { font-family: Consolas, monospace; font-size: 9.5pt; }
 </style>
 </head>
@@ -43,7 +43,8 @@ open casualty data from Gaza (Tech for Palestine), science agencies (USGS, NASA)
 news outlets. Western mainstream media are collected only to <i>measure</i> which crises they ignore. Results are shown
 on an interactive world map with a transparent, user-weighted priority score. For each location the assistant
 recommends <b>direct response</b> or <b>partnership</b> with local organisations, starting with the country's Red Crescent
-or Red Cross society. An LLM (DeepSeek) then drafts a campaign proposal, restricted to the verified facts it receives.</p>
+or Red Cross society. An LLM (DeepSeek) is integrated to draft campaign and project proposals restricted to verified facts;
+until the API key is configured the prototype uses a deterministic template, and the live LLM is evaluated in Assignment 2.</p>
 <div class="box"><b>Who it helps and with what (one sentence):</b> STK Asistanı helps NGO programme and fundraising teams
 find the most urgent and most overlooked crises in their sectors, using independent evidence, and turn them into
 campaigns and local partnerships.<br>
@@ -85,11 +86,12 @@ classifiers, never as evidence about where needs are.</p>
 </ol>
 <h3>b) Key Steps:</h3>
 <ol>
-  <li>Ingestion pipeline for UCDP, GHI, IFRC GO, Tech for Palestine, USGS, NASA EONET and 18 RSS feeds (done).</li>
+  <li>Ingestion pipeline for UCDP, GHI, IFRC GO, Tech for Palestine, OECD, USGS, NASA EONET, Open-Meteo, Natural Earth and 18 RSS feeds (done).</li>
   <li>Sector and crisis-dynamics classifiers trained on HumSet, with a self-training loop and accuracy guard (first version done).</li>
   <li>Country indicators, user-weighted priority score and "ignored by Western media" flag (first version done).</li>
   <li>Interactive map with NGO profile, ranking, country dossier, Gaza casualty panel and partner list (prototype done).</li>
-  <li>DeepSeek integration (OpenAI-compatible API via OpenRouter) for grounded campaign drafting with a validator.</li>
+  <li>DeepSeek integration (OpenAI-compatible API via OpenRouter) for grounded campaign drafting with a validator (code done, template fallback
+      active; live evaluation in Assignment 2).</li>
   <li>Hand-label ~200 current (2026) articles to measure the real effect of self-training. Extend the news gazetteer and add
       more regional outlets (Somalia, Sahel, Myanmar).</li>
   <li>Test with NGO personas (sector, size, home country). Document source disagreements and biases.</li>
@@ -103,7 +105,7 @@ classifiers, never as evidence about where needs are.</p>
       and crisis pillars</td><td>Training text only</td></tr>
   <tr><td><b>UCDP GED 26.1 + candidate 2026</b> (Uppsala University, academic)</td><td>210,115 georeferenced violent events, 2016 – Aug 2026,
       deaths (best estimate, civilians)</td><td>Protracted &amp; recent conflict</td></tr>
-  <tr><td><b>Global Hunger Index 2026</b> (Concern Worldwide &amp; Welthungerhilfe, NGOs)</td><td>122 countries</td><td>Hunger</td></tr>
+  <tr><td><b>Global Hunger Index 2026</b> (Concern Worldwide &amp; Welthungerhilfe, NGOs)</td><td>130 countries (8 with a provisional category)</td><td>Hunger</td></tr>
   <tr><td><b>IFRC GO</b> (Red Cross / Red Crescent movement)</td><td>164 active appeals (CHF 2.2 bn, 51% funded); 220 national societies</td>
       <td>Funding gap, new emergencies, verified partners</td></tr>
   <tr><td><b>Tech for Palestine</b> (Gaza Ministry of Health data)</td><td>Daily casualties 2023–2026: 74,392 killed incl. 20,179 children;
@@ -176,7 +178,7 @@ Both are kept on purpose, because they answer different questions (who is killed
       (≥ 1.5× the usual level, ≥ 50 deaths/month, not falling vs the previous quarter), <i>chronic</i> and <i>improving</i> (only below
       20 deaths/month). A clear drop while killing continues (≥ 100 deaths/month or heavy violence in ≥ 9 of 12 months) gets no label. A drop in recorded deaths is never called improvement while people are still being killed; recent UCDP months are
       preliminary and usually revised upwards. Current result: Yemen ×9 (Aug 2026: 1,380 deaths), Nigeria, South Sudan, Pakistan and Colombia
-      are worsening. Escalation is a user-weighted bonus that only adds to the score (a crisis that is not worsening is never pulled down) and a dedicated "worsening lens" for early action.
+      are worsening. Escalation is a user-weighted bonus that only adds to the score (a crisis that is not worsening is never pulled down), and a dedicated "worsening lens" shows these crises for early action.
       Hunger trend: GHI 2018 → 2026.</li>
   <li><b>Aid presence relative to need:</b> humanitarian aid per person in severe need = OECD humanitarian aid (2023–2024 average)
       ÷ (population × the part of protracted suffering above 0.3). $5 or less per person → gap 1, $300 or more → 0 (log scale).
@@ -190,10 +192,10 @@ Both are kept on purpose, because they answer different questions (who is killed
       (Open-Meteo, ECMWF ERA5), and news naming it. A security level (low / medium / high) decides whether livelihood projects are feasible
       or only emergency aid through a partner. A crop–climate table (21 crops; coarse thresholds, flagged for agronomist confirmation) and a
       catalogue of 16 sustainable project types, each with procurement items, a self-sustaining mechanism (seed bank, pass-on livestock,
-      cooperative, water committee) and risks, are matched to each province. The LLM then drafts a full proposal from these facts plus an
-      optional field note from the NGO. Example: Herat (300 mm rain, 17 °C) matches saffron, almond, pomegranate and grape; Kabul (293 deaths
+      cooperative, water committee) and risks, are matched to each province. A full proposal is then drafted from these facts plus an optional
+      field note from the NGO (by the LLM once enabled; by the template today). Example: Herat (300 mm rain, 17 °C) matches saffron, almond, pomegranate and grape; Kabul (293 deaths
       in 12 months) gets emergency food and psychosocial support instead.</li>
-  <li><b>Campaign generation:</b> DeepSeek (<code>deepseek/deepseek-v4.1-flash</code> via OpenRouter, ≈ $0.001 per campaign; free fallback model)
+  <li><b>Campaign generation (integrated, to be evaluated live in Assignment 2):</b> DeepSeek (<code>deepseek/deepseek-v4.1-flash</code> via OpenRouter, ≈ $0.001 per campaign; free fallback model)
       receives a JSON block of facts with named sources. A validator removes organisations that are not among the candidates, flags
       numbers that do not appear in the facts and keeps only supplied URLs.</li>
 </ol>
