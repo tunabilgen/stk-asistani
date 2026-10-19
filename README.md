@@ -2,7 +2,7 @@
 
 > **SDG 17.17 · 16.1 · 2.1 · 1.5 / 11.5** · Capstone "AI for the SDGs" · Group 6 (Tuna Bilgen, Ufuk Gündoğar)
 
-**One sentence:** STK Asistanı helps small and medium Turkish NGOs (STK = *sivil toplum kuruluşu*)
+**One sentence:** STK Asistanı helps NGOs anywhere in the world (first pilot users: small and medium NGOs in Türkiye; STK = *sivil toplum kuruluşu*, NGO in Turkish)
 decide **where** to run their next aid campaign, **what** it should contain and **with whom** to
 partner. It reads independent data and news continuously, classifies them with self-updating ML
 models, and ranks acute, protracted and under-reported crises against the NGO's own sectors. The
