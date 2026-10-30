@@ -91,7 +91,7 @@ and **0%** to Sudan, DR Congo, Somalia, Syria and Lebanon. See [reports/eda_summ
 
 ## Assignment 2 — what changed and what we tried
 
-**Video (2–3 min):** _link will be added here_ · Full numbers: [reports/model_comparison.json](reports/model_comparison.json),
+**Report (PDF):** [docs/gundogar_bilgen_assignment2.pdf](docs/gundogar_bilgen_assignment2.pdf) · **Video (2–3 min):** _link will be added here_ · Full numbers: [reports/model_comparison.json](reports/model_comparison.json),
 [reports/multilingual_eval.json](reports/multilingual_eval.json), [reports/attention_analysis.json](reports/attention_analysis.json).
 
 ### Changes made after the Assignment 1 feedback

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Assignment 2 Report — STK Asistanı</title>
+<style>
+  @page { size: A4; margin: 15mm 17mm 14mm 17mm; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 10.6pt; line-height: 1.3; color: #111; }
+  h1 { font-size: 15pt; margin: 0 0 2pt; }
+  h2 { font-size: 12.5pt; margin: 9pt 0 3pt; }
+  h3 { font-size: 11pt; margin: 6pt 0 2pt; }
+  p { margin: 0 0 4pt; text-align: justify; }
+  ol, ul { margin: 1pt 0 4pt; padding-left: 18pt; }
+  li { margin-bottom: 1pt; }
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 2pt 0 5pt; break-inside: avoid; }
+  th, td { border: 1px solid #aaa; padding: 2pt 4pt; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  td.n { text-align: right; white-space: nowrap; }
+  figure { margin: 3pt 0 4pt; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; }
+  figcaption { font-size: 8.5pt; color: #333; }
+  .box { border: 1px solid #999; padding: 4pt 7pt; margin: 4pt 0 5pt; font-size: 10pt; background: #fafafa; break-inside: avoid; }
+  .meta { font-size: 10pt; margin-bottom: 6pt; }
+  a { color: #1a4fa0; }
+  code { font-family: Consolas, monospace; font-size: 8.8pt; }
+</style>
+</head>
+<body>
+
+<h1>STK Asistanı — Assignment 2: Working Prototype and Model Development</h1>
+<div class="meta">AI for the SDGs · Capstone · Group 6: Ufuk Gündoğar, Tuna Bilgen · 30 October 2026</div>
+<div class="box">
+<b>GitHub repository (code, data, README):</b> <a href="https://github.com/tunabilgen/stk-asistani">https://github.com/tunabilgen/stk-asistani</a><br>
+<b>Screen recording (2–3 min):</b> linked at the top of the README, section “Assignment 2”.<br>
+<b>Run it:</b> <code>pip install -r requirements.txt</code> → <code>python app.py</code> → http://localhost:8000 (full steps in the README).
+</div>
+
+<h2>1) What the prototype does, end to end</h2>
+<p>STK Asistanı helps NGOs decide <b>where</b> to run their next aid campaign, <b>what</b> it should contain and <b>with whom</b>
+to partner, with a focus on crises that mainstream media ignore. The working prototype runs the full chain on real, current data:</p>
+<ol>
+  <li><b>Ingest</b> independent sources (UCDP conflict deaths, Global Hunger Index, IFRC appeals, Tech for Palestine, NASA EONET,
+  USGS), 26 news feeds including 8 Turkish outlets, and 30 days of <b>GDELT</b> media data (274,838 articles, 7,317 outlets).</li>
+  <li><b>Classify</b> every news item into 10 humanitarian sectors with our trained model; Turkish and Arabic text is routed to a multilingual model.</li>
+  <li><b>Score</b> every country: need, trend, aid gap and the <b>need-relative silence index</b> (section 4).</li>
+  <li><b>Show</b> the result on an interactive map with a country file (score breakdown, trend, sources, verified Red Crescent / Red Cross partner, province-level project ideas).</li>
+  <li><b>Draft</b> a campaign with an LLM (DeepSeek V4.1 Flash) that may use only the verified facts; a validator checks every number and partner name, and a human approves the text.</li>
+</ol>
+<figure><img src="../reports/figures/prototype_a2.jpg" style="width:92%"><figcaption>Fig. 1 — The prototype opens on the Silence view. Sudan is first: very high need, and Western media give it 10% of the coverage its need would justify.</figcaption></figure>
+
+<h2>2) Models tried for the sector classifier</h2>
+<p><b>Task and data.</b> Multi-label classification of humanitarian text into 10 sectors (food, health, WASH, shelter, education,
+protection, nutrition, livelihoods, agriculture, logistics). Training data: HumSet (Fekih et al., 2022), expert-labelled excerpts
+in English, French and Spanish. All models are tested on the same official test split of <b>12,384 excerpts</b>, and every learned
+model gets per-class decision thresholds tuned on the validation split, so the comparison is fair.</p>
+<p><b>Metrics.</b> One text can have several sectors, so accuracy is not meaningful. We use <b>F1</b>, the balance of precision and
+recall. <b>Micro-F1</b> pools all decisions, so frequent sectors dominate it; <b>macro-F1</b> averages the 10 sectors equally and shows
+whether rare sectors (logistics, agriculture) also work. We also report F1 per language.</p>
+<table>
+<tr><th>#</th><th>Approach</th><th>micro-F1</th><th>macro-F1</th><th>Note</th></tr>
+<tr><td>1</td><td>Keyword rules</td><td class="n">0.558</td><td class="n">0.539</td><td>no learning, baseline</td></tr>
+<tr><td>2</td><td>TF-IDF + Complement Naive Bayes</td><td class="n">0.677</td><td class="n">0.631</td><td></td></tr>
+<tr><td>3</td><td>TF-IDF + linear SVM</td><td class="n"><b>0.781</b></td><td class="n"><b>0.745</b></td><td>best, but no probabilities</td></tr>
+<tr><td>4</td><td>TF-IDF + logistic regression</td><td class="n">0.780</td><td class="n">0.740</td><td><b>used in the app</b> for EN/FR/ES</td></tr>
+<tr><td>5</td><td>Multilingual sentence embeddings (frozen MiniLM) + LogReg</td><td class="n">0.737</td><td class="n">0.696</td><td><b>used in the app</b> for TR/AR</td></tr>
+<tr><td>6</td><td>Fine-tuned multilingual MiniLM transformer</td><td class="n">0.413</td><td class="n">0.422</td><td>laptop CPU: 12k excerpts, 2 epochs, 73 min</td></tr>
+<tr><td>7</td><td>LLM zero-shot, DeepSeek V4.1 Flash</td><td class="n">0.818</td><td class="n">0.717</td><td>preliminary: 37 excerpts; model 4 on the same 37: 0.718 / 0.594</td></tr>
+</table>
+<figure><img src="../reports/figures/model_comparison.png" style="width:80%"><figcaption>Fig. 2 — Models 1–6 on the full HumSet test set (12,384 excerpts).</figcaption></figure>
+<p><b>Which performed better and why.</b> The linear models (SVM 0.781, logistic regression 0.780) were best on the full test set.
+HumSet excerpts are long and full of sector words (<i>cholera, latrine, school</i>), so word n-grams carry most of the signal, and with
+100k+ labelled examples a linear model learns them well and retrains in about a minute, which our self-training loop needs. We keep
+logistic regression instead of SVM because it gives probabilities, which the dashboard uses. The frozen sentence-embedding model is about
+4 points lower because it compresses each text into one 384-number vector. The fine-tuned transformer did badly <b>because of our compute
+budget, not the method</b>: on a laptop CPU we could train on only 10% of the data for 2 epochs, and the loss was still falling; we report
+this negative result instead of hiding it. The LLM, with no training at all, beat our model by about 10 points on the same 37 excerpts,
+but the free model hit its daily usage limit after 37 calls, so this is preliminary; the run resumes from its cache and the full 200
+will be reported in Assignment 3. Even if the LLM is more accurate, it is too slow and rate-limited to label thousands of news items a day,
+so the app uses it only for writing campaign drafts, where a human checks the output.</p>
+
+<h2>3) Turkish and Arabic</h2>
+<p>HumSet has no Turkish or Arabic text, but our users read Turkish media and many crises are reported in Arabic. We machine-translated
+300 English test excerpts with open OPUS-MT models (labels carry over; the excerpts were never seen in training) and scored every model
+in all three languages.</p>
+<table>
+<tr><th>micro-F1</th><th>English</th><th>Turkish</th><th>Arabic</th></tr>
+<tr><td>Keyword rules</td><td class="n">0.599</td><td class="n">0.151</td><td class="n">0.047</td></tr>
+<tr><td>TF-IDF + LogReg (Assignment 1 model)</td><td class="n"><b>0.792</b></td><td class="n">0.336</td><td class="n">0.200</td></tr>
+<tr><td>Multilingual embeddings + LogReg</td><td class="n">0.732</td><td class="n"><b>0.699</b></td><td class="n"><b>0.704</b></td></tr>
+<tr><td><b>App: language router</b></td><td class="n"><b>0.792</b></td><td class="n"><b>0.695</b></td><td class="n"><b>0.704</b></td></tr>
+</table>
+<p>The Assignment 1 model <b>could not read Turkish or Arabic</b>. The app now detects the language of each text and sends EN/FR/ES to
+TF-IDF and Turkish/Arabic to the multilingual model, so it keeps the best score in every language. Limitation: machine translations are
+cleaner than real news; a small hand-labelled set of real Turkish and Arabic headlines is planned for Assignment 3.</p>
+
+<h2>4) The silence idea at the centre: need-relative silence</h2>
+<p>Assignment 1 used <i>need × (1 − attention)</i>, which treats ten articles about a catastrophe the same as ten articles about a small
+crisis. Now each crisis is compared with the coverage its need would justify:</p>
+<div class="box"><code>coverage ratio = (country's share of Western foreign news) ÷ (country's share of total need)</code><br>
+<code>silence = need × (1 − min(coverage ratio, 1))</code><br>
+A ratio of 1 means fair coverage; 0.1 means the crisis gets 10% of it. Home-country news (USA, UK) is excluded. The interface shows the
+ratio (“West: 10% of due coverage”) instead of a yes/no “ignored” flag.</div>
+<p>Top of the ranking: <b>Sudan</b> (10% of due coverage), Burundi, South Sudan, DR Congo, Somalia, Chad, Madagascar, Niger, Haiti,
+Timor-Leste. Palestine receives 59% of its due coverage, Ukraine 346%. Attention now comes from GDELT instead of ~90 RSS items. The two
+samples agree well (attention ρ = 0.66; silence ranking ρ = 0.80; 8 of the top 10 identical), so the Assignment 1 finding holds.</p>
+
+<h2>5) Media attention vs need vs funding (GDELT, Turkish media, OCHA FTS)</h2>
+<ul>
+  <li><b>Attention follows need only weakly.</b> Across 35 high-need countries, Spearman ρ = 0.25 for Western media, 0.29 for Turkish
+  media and 0.14 for all GDELT outlets (none significant at 5%).</li>
+  <li><b>Turkish vs Western media.</b> Turkish outlets give 33% of their foreign news to these crises, Western outlets 19% (Fig. 3).</li>
+  <li><b>UN funding as a benchmark only.</b> OCHA FTS data is never used in the ranking, so the ranking stays independent. Funding per
+  person follows need (ρ = 0.59). Controlling for need, more Western attention goes with somewhat more funding (partial ρ = 0.28,
+  p = 0.10). The quiet half of crises receives a median $3.9 per person, the visible half $51.6, but the visible half also has higher
+  need, so this is a hint, not proof.</li>
+  <li><b>Where is Gaza?</b> Of stories whose web address names Gaza or Palestine, GDELT's geocoder placed 90% (Western), 96% (Turkish)
+  and 90% (other outlets) <b>only in Israel</b>. Because the rate is similar for all groups, this is mainly a geocoder effect, not one
+  group's bias, but any tool that trusts GDELT's locations will under-count Palestine. We re-attribute stories by the place named in the
+  address, with the same rule for every country.</li>
+</ul>
+<figure><img src="../reports/figures/attention_tr_vs_west.png" style="width:66%"><figcaption>Fig. 3 — Share of each media group's foreign news given to the 15 highest-need crises (GDELT, 30 days).</figcaption></figure>
+
+<h2>6) LLM integration and safety</h2>
+<p>Campaign and project drafts are written by <b>DeepSeek V4.1 Flash</b>, called through the official OpenCode command-line tool, so the
+repository contains no API key. The prompt allows only the facts we pass (numbers with named sources, verified partner candidates).
+A validator then removes partner names that are not in our candidate list and flags any number that does not appear in the facts.
+A human must approve every text. The free model has a daily usage limit; when it is unreachable the app shows the last saved draft for
+that country, <b>labelled with the model that wrote it</b> and re-validated against today's data, or a template. During development the free
+quota ran out: the Sudan (Turkish) draft was written by DeepSeek, and five more drafts were written by Claude Opus 5.5 using the same
+prompt and facts. Each one is labelled as such in the app and in the README.</p>
+
+<h2>7) Changes made after the Assignment 1 feedback</h2>
+<table>
+<tr><th style="width:34%">Feedback</th><th>What we did</th></tr>
+<tr><td>Put the silence idea at the centre; simplify the rest</td><td>The app opens on the Silence view; silence is now relative to need; the yes/no flag became a coverage ratio.</td></tr>
+<tr><td>Use GDELT</td><td>Western attention now comes from GDELT 2.0 (274,838 articles, 7,317 outlets, 30 days).</td></tr>
+<tr><td>Use ReliefWeb and OCHA FTS</td><td>ReliefWeb was already a source. OCHA FTS is used only as a benchmark (“does UN money reach the crises the media ignore?”).</td></tr>
+<tr><td>Add Turkish media; compare with Western media</td><td>8 Turkish outlets across the political spectrum (TRT Haber, AA, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet) plus Turkish GDELT outlets; comparison in section 5.</td></tr>
+<tr><td>Test the classifier on Turkish and Arabic</td><td>New EN/TR/AR test set; language router in the app (section 3).</td></tr>
+<tr><td>Interview 2–3 NGOs</td><td>We could not arrange interviews in this period. In Assignment 3 we replace them with structured persona tests (small Turkish NGO, international NGO, journalist, donor) and state clearly that this is a weaker form of user validation.</td></tr>
+<tr><td>Discuss ranking sensitivity</td><td>First step done (GDELT vs RSS check, section 4); a full sensitivity analysis of the weights is planned for the Assignment 3 report.</td></tr>
+</table>
+
+<h2>8) Limitations and next steps (Assignment 3)</h2>
+<ul>
+  <li><b>Framing analysis.</b> Measure <i>how</i> outlets describe crises (are victims named? “died” vs “were killed”? who is quoted?) with an LLM, validated on a hand-labelled set.</li>
+  <li><b>Testing.</b> Persona tests, documentation of wrong, inconsistent or biased outputs and their fixes; full 200-excerpt LLM evaluation.</li>
+  <li><b>Known limitations.</b> The “Western” outlet list is our choice; Turkish and Arabic scores come from machine translations; GDELT geocoding needs correction; the transformer was limited by CPU compute.</li>
+</ul>
+
+</body>
+</html>
