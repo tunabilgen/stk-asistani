@@ -203,6 +203,14 @@ Code: [src/attention_analysis.py](src/attention_analysis.py), 35 countries with 
   *and* get few humanitarian reports. These are the crises where an NGO can add the most visibility.
 
   ![media vs ReliefWeb](reports/figures/media_vs_reliefweb.png)
+* **Why ReliefWeb stays out of the ranking.** Counts show volume, not language. ReliefWeb is not an independent source:
+  its main publishers depend on donor governments for funding and on host governments for access (in Sudan, the government
+  decides where aid workers may go). The humanitarian principle of neutrality often leads them not to name who is responsible;
+  in asymmetric situations such as Gaza, this "neutral" wording can itself be one-sided. We therefore use ReliefWeb only to
+  check *how much* the aid system reports. *How* it reports (does it name perpetrators? "died" or "were killed"?) is the
+  subject of our Assignment 3 framing analysis, side by side with Western and Turkish media. *Note:* ReliefWeb publishes only
+  humanitarian content, so raw counts are not comparable with media; we compare each crisis's share within the 35 crises,
+  relative to need.
 * **Where is Gaza?** Of stories whose URL names Gaza/Palestine, GDELT located 90% (Western), 96% (Turkish) and 90% (other) **only in Israel**.
   Because the rate is about the same for every group, this is mainly a geocoder effect, not Western bias; but it means any tool that trusts
   GDELT's locations will under-count Palestine. We correct for it. *How* outlets describe the crisis (framing) is our Assignment 3 topic.
