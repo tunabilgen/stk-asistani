@@ -5,11 +5,15 @@ Questions
   Q2  Does the large GDELT sample confirm the small RSS sample used in Assignment 1?
   Q3  Does humanitarian funding (OCHA FTS, UN — benchmark only, never in the ranking) reach
       the crises the media ignore?  Funding per person vs Western attention, controlling for need.
+  Q4  Where does GDELT locate stories about Gaza / Palestine?
+  Q5  Does the humanitarian system (ReliefWeb reports, UN OCHA — benchmark only) see the crises the media ignore?
 
 Inputs : data/processed/gdelt_articles.parquet, data/processed/fts_funding.parquet,
+         data/processed/reliefweb_counts.parquet,
          data/final/country_crisis_dataset.csv
 Outputs: reports/attention_analysis.json, reports/attention_analysis.md,
          reports/figures/attention_tr_vs_west.png, reports/figures/attention_vs_funding.png,
+         reports/figures/media_vs_reliefweb.png,
          data/final/media_attention_gdelt.csv
 
 Usage:  python -m src.attention_analysis
@@ -116,6 +120,42 @@ def main():
     res["q4_palestine_stories_located_in_israel_only"] = {
         g: {"stories": int(len(x)), "israel_only_pct": round(100 * float(x["israel_only"].mean()), 1)}
         for g, x in per.groupby("group")}
+
+    # Q5 — humanitarian-system attention (ReliefWeb reports, same 30 days) vs media attention.
+    # Both are turned into coverage ratios inside the crisis set: share of attention / share of need.
+    rw = pd.read_parquet(PROCESSED / "reliefweb_counts.parquet").set_index("iso3")["reports"]
+    crises["rw_reports"] = rw.reindex(crises.index).fillna(0)
+    ns = crises["n_prot"] / crises["n_prot"].sum()
+    crises["ratio_media"] = (crises["n_western"] / crises["n_western"].sum()) / ns
+    crises["ratio_rw"] = (crises["rw_reports"] / crises["rw_reports"].sum()) / ns
+    silent10 = crises["silence_gdelt"].nlargest(10).index
+    seen = crises.loc[silent10]
+    res["q5_reliefweb"] = {
+        "reports_30d": int(crises["rw_reports"].sum()),
+        "spearman_need_vs_reliefweb": dict(zip(["rho", "p"], np.round(spearmanr(crises["n_prot"], crises["rw_reports"]), 3).tolist())),
+        "spearman_need_vs_western_media": res["q1_spearman_need_vs_attention"]["western"],
+        "spearman_reliefweb_vs_western_media": round(float(spearmanr(crises["rw_reports"], crises["n_western"])[0]), 3),
+        "media_silent_top10": [{"iso3": i, "name": r["name"], "reliefweb_reports": int(r["rw_reports"]),
+                                "media_ratio": round(float(r["ratio_media"]), 2), "reliefweb_ratio": round(float(r["ratio_rw"]), 2)}
+                               for i, r in seen.iterrows()],
+        "media_silent_top10_seen_by_reliefweb": int((seen["ratio_rw"] >= 0.5).sum()),
+        "median_reliefweb_ratio_silent10_vs_others": [round(float(seen["ratio_rw"].median()), 2),
+                                                       round(float(crises.drop(silent10)["ratio_rw"].median()), 2)]}
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    x, y = crises["ratio_media"].clip(lower=0.005), crises["ratio_rw"].clip(lower=0.005)
+    ax.scatter(x, y, s=40 + 300 * crises["n_prot"], color="#b23a2e", alpha=0.55, edgecolor="white")
+    for i, r in crises.iterrows():
+        if i in silent10 or r["ratio_media"] > 2 or r["ratio_rw"] > 2:
+            ax.annotate(r["name"], (x[i], y[i]), fontsize=7, xytext=(3, 3), textcoords="offset points")
+    ax.axhline(1, color="#999", lw=0.8, ls="--"); ax.axvline(1, color="#999", lw=0.8, ls="--")
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlabel("Western media: share of coverage ÷ share of need (GDELT, 30 days)")
+    ax.set_ylabel("Humanitarian system: share of ReliefWeb reports ÷ share of need")
+    ax.text(0.02, 0.98, "top left: the aid system reports, the media are silent", transform=ax.transAxes, va="top", fontsize=8, color="#555")
+    ax.set_title("Bubble size = need. 1 = attention in line with need. ReliefWeb is a benchmark only", loc="left", fontsize=9)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout(); fig.savefig(FIGURES / "media_vs_reliefweb.png", dpi=160); plt.close(fig)
 
     (ROOT / "reports/attention_analysis.json").write_text(json.dumps(res, indent=1, ensure_ascii=False), encoding="utf-8")
     df[["name", "n_prot", "share_western", "share_turkish", "share_all", "n_western", "n_turkish", "n_all",

@@ -151,8 +151,8 @@
    "all_pct": 0.02
   }
  ],
- "q2_rss_vs_gdelt_western_rho": 0.66,
- "q2_silence_rank_rho": 0.804,
+ "q2_rss_vs_gdelt_western_rho": 0.726,
+ "q2_silence_rank_rho": 0.737,
  "q2_silence_top10_overlap": 8,
  "q2_silence_top10_gdelt": [
   "Sudan",
@@ -198,5 +198,94 @@
    "stories": 31,
    "israel_only_pct": 90.3
   }
+ },
+ "q5_reliefweb": {
+  "reports_30d": 1159,
+  "spearman_need_vs_reliefweb": {
+   "rho": 0.63,
+   "p": 0.0
+  },
+  "spearman_need_vs_western_media": {
+   "rho": 0.254,
+   "p": 0.14
+  },
+  "spearman_reliefweb_vs_western_media": 0.598,
+  "media_silent_top10": [
+   {
+    "iso3": "SDN",
+    "name": "Sudan",
+    "reliefweb_reports": 108,
+    "media_ratio": 0.48,
+    "reliefweb_ratio": 1.78
+   },
+   {
+    "iso3": "BDI",
+    "name": "Burundi",
+    "reliefweb_reports": 17,
+    "media_ratio": 0.2,
+    "reliefweb_ratio": 0.4
+   },
+   {
+    "iso3": "SSD",
+    "name": "S. Sudan",
+    "reliefweb_reports": 58,
+    "media_ratio": 0.34,
+    "reliefweb_ratio": 1.35
+   },
+   {
+    "iso3": "COD",
+    "name": "Dem. Rep. Congo",
+    "reliefweb_reports": 151,
+    "media_ratio": 0.28,
+    "reliefweb_ratio": 3.69
+   },
+   {
+    "iso3": "SOM",
+    "name": "Somalia",
+    "reliefweb_reports": 64,
+    "media_ratio": 1.18,
+    "reliefweb_ratio": 1.3
+   },
+   {
+    "iso3": "TCD",
+    "name": "Chad",
+    "reliefweb_reports": 57,
+    "media_ratio": 0.23,
+    "reliefweb_ratio": 1.5
+   },
+   {
+    "iso3": "MDG",
+    "name": "Madagascar",
+    "reliefweb_reports": 4,
+    "media_ratio": 0.08,
+    "reliefweb_ratio": 0.11
+   },
+   {
+    "iso3": "NER",
+    "name": "Niger",
+    "reliefweb_reports": 15,
+    "media_ratio": 0.08,
+    "reliefweb_ratio": 0.43
+   },
+   {
+    "iso3": "HTI",
+    "name": "Haiti",
+    "reliefweb_reports": 66,
+    "media_ratio": 0.39,
+    "reliefweb_ratio": 1.79
+   },
+   {
+    "iso3": "TLS",
+    "name": "Timor-Leste",
+    "reliefweb_reports": 1,
+    "media_ratio": 0.09,
+    "reliefweb_ratio": 0.03
+   }
+  ],
+  "media_silent_top10_seen_by_reliefweb": 6,
+  "median_reliefweb_ratio_silent10_vs_others": [
+   1.33,
+   0.45
+  ]
  }
 }

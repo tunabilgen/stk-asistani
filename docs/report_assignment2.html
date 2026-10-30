@@ -7,7 +7,9 @@
   @page { size: A4; margin: 15mm 17mm 14mm 17mm; }
   body { font-family: "Times New Roman", Times, serif; font-size: 10.6pt; line-height: 1.3; color: #111; }
   h1 { font-size: 15pt; margin: 0 0 2pt; }
-  h2 { font-size: 12.5pt; margin: 9pt 0 3pt; }
+  h2 { font-size: 12.5pt; margin: 9pt 0 3pt; break-after: avoid; }
+  .two { display: flex; gap: 8pt; align-items: flex-end; break-inside: avoid; }
+  .two figure { flex: 1; }
   h3 { font-size: 11pt; margin: 6pt 0 2pt; }
   p { margin: 0 0 4pt; text-align: justify; }
   ol, ul { margin: 1pt 0 4pt; padding-left: 18pt; }
@@ -104,7 +106,7 @@ ratio (“West: 10% of due coverage”) instead of a yes/no “ignored” flag.<
 Timor-Leste. Palestine receives 59% of its due coverage, Ukraine 346%. Attention now comes from GDELT instead of ~90 RSS items. The two
 samples agree well (attention ρ = 0.66; silence ranking ρ = 0.80; 8 of the top 10 identical), so the Assignment 1 finding holds.</p>
 
-<h2>5) Media attention vs need vs funding (GDELT, Turkish media, OCHA FTS)</h2>
+<h2>5) Media attention vs need vs the humanitarian system (GDELT, Turkish media, ReliefWeb, OCHA FTS)</h2>
 <ul>
   <li><b>Attention follows need only weakly.</b> Across 35 high-need countries, Spearman ρ = 0.25 for Western media, 0.29 for Turkish
   media and 0.14 for all GDELT outlets (none significant at 5%).</li>
@@ -113,12 +115,19 @@ samples agree well (attention ρ = 0.66; silence ranking ρ = 0.80; 8 of the top
   person follows need (ρ = 0.59). Controlling for need, more Western attention goes with somewhat more funding (partial ρ = 0.28,
   p = 0.10). The quiet half of crises receives a median $3.9 per person, the visible half $51.6, but the visible half also has higher
   need, so this is a hint, not proof.</li>
+  <li><b>Does the humanitarian system see what the media ignore? (ReliefWeb, benchmark only)</b> We counted ReliefWeb reports per
+  country over the same 30 days (1,159 reports). They follow need much more closely than Western media (ρ = 0.63, p &lt; 0.001, vs 0.25).
+  Of the 10 most media-silent crises, 6 receive at least half of their fair share of ReliefWeb reports: DR Congo (3.7×), Haiti, Sudan,
+  Chad, South Sudan (Fig. 4, top left). The aid system reports on them; the media do not. Four are <b>silent twice</b>: Madagascar,
+  Timor-Leste, Niger and Burundi get little media coverage <i>and</i> few humanitarian reports. These are the crises where an NGO
+  can add the most visibility.</li>
   <li><b>Where is Gaza?</b> Of stories whose web address names Gaza or Palestine, GDELT's geocoder placed 90% (Western), 96% (Turkish)
   and 90% (other outlets) <b>only in Israel</b>. Because the rate is similar for all groups, this is mainly a geocoder effect, not one
   group's bias, but any tool that trusts GDELT's locations will under-count Palestine. We re-attribute stories by the place named in the
   address, with the same rule for every country.</li>
 </ul>
-<figure><img src="../reports/figures/attention_tr_vs_west.png" style="width:66%"><figcaption>Fig. 3 — Share of each media group's foreign news given to the 15 highest-need crises (GDELT, 30 days).</figcaption></figure>
+<div class="two"><figure><img src="../reports/figures/attention_tr_vs_west.png"><figcaption>Fig. 3 — Share of each media group's foreign news given to the 15 highest-need crises (GDELT, 30 days).</figcaption></figure>
+<figure><img src="../reports/figures/media_vs_reliefweb.png"><figcaption>Fig. 4 — Media attention vs humanitarian-system attention, both relative to need (1 = in line with need). Top left: the aid system reports, the media are silent. Bottom left: silent twice.</figcaption></figure></div>
 
 <h2>6) LLM integration and safety</h2>
 <p>Campaign and project drafts are written by <b>DeepSeek V4.1 Flash</b>, called through the official OpenCode command-line tool, so the
@@ -134,7 +143,7 @@ prompt and facts. Each one is labelled as such in the app and in the README.</p>
 <tr><th style="width:34%">Feedback</th><th>What we did</th></tr>
 <tr><td>Put the silence idea at the centre; simplify the rest</td><td>The app opens on the Silence view; silence is now relative to need; the yes/no flag became a coverage ratio.</td></tr>
 <tr><td>Use GDELT</td><td>Western attention now comes from GDELT 2.0 (274,838 articles, 7,317 outlets, 30 days).</td></tr>
-<tr><td>Use ReliefWeb and OCHA FTS</td><td>OCHA FTS added as a benchmark only (“does UN money reach the crises the media ignore?”), never in the ranking. ReliefWeb is not used: it is also run by UN OCHA, and the ranking deliberately stays independent of UN data; it may be added as a second benchmark in Assignment 3.</td></tr>
+<tr><td>Use ReliefWeb and OCHA FTS</td><td>Both added as benchmarks only, never in the ranking, so the ranking stays independent of UN data. ReliefWeb: does the humanitarian system report on the crises the media ignore? OCHA FTS: does UN money reach them? (section 5)</td></tr>
 <tr><td>Add Turkish media; compare with Western media</td><td>8 Turkish outlets across the political spectrum (TRT Haber, AA, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet) plus Turkish GDELT outlets; comparison in section 5.</td></tr>
 <tr><td>Test the classifier on Turkish and Arabic</td><td>New EN/TR/AR test set; language router in the app (section 3).</td></tr>
 <tr><td>Interview 2–3 NGOs</td><td>We could not arrange interviews in this period. In Assignment 3 we replace them with structured persona tests (small Turkish NGO, international NGO, journalist, donor) and state clearly that this is a weaker form of user validation.</td></tr>
@@ -146,6 +155,7 @@ prompt and facts. Each one is labelled as such in the app and in the README.</p>
   <li>The list of “Western mainstream” outlets (24 domains) is our choice; a different list could change individual ratios.</li>
   <li>Turkish and Arabic scores come from machine translations, which are cleaner than real news.</li>
   <li>GDELT's geocoder misplaces Palestine stories; our URL-based correction fixes only stories whose address names the place.</li>
+  <li>ReliefWeb counts come from its public RSS feed (the API needs an approved app name); one day for Yemen hit the feed's 20-item cap, so Yemen is a lower bound.</li>
   <li>The fine-tuned transformer was limited by CPU compute; the LLM evaluation covers 37 of 200 planned excerpts.</li>
   <li>No real NGO users have tested the tool yet.</li>
 </ul>

@@ -19,7 +19,8 @@ the Red Cross / Red Crescent movement, open Gaza casualty data, science agencies
 Global-South media. Western mainstream media are collected **only to measure which crises they ignore**
 (3 RSS feeds plus 24 outlets in GDELT). Since Assignment 2, UN data appears in one place only: **OCHA FTS funding
 is used as an external benchmark** ("does UN money reach the crises the media ignore?") and never enters the score.
-ReliefWeb (also run by UN OCHA) is not used, for the same reason.
+**ReliefWeb** (also UN OCHA) is used the same way: the number of reports per country is a benchmark for how much the
+humanitarian system itself pays attention to a crisis.
 
 | Source | Publisher (type) | Used for |
 |---|---|---|
@@ -34,6 +35,7 @@ ReliefWeb (also run by UN OCHA) is not used, for the same reason.
 | News RSS (comparison only) | BBC, The Guardian, New York Times | Western-attention gap (live feed) |
 | [GDELT 2.0](https://www.gdeltproject.org) | GDELT Project (open event data) | **Western attention** since Assignment 2: 30 days, 274,838 articles, 7,317 outlets; 24 Western mainstream and 28 Turkish domains listed in `src/sources/gdelt.py` |
 | [OCHA FTS](https://fts.unocha.org) | UN OCHA | **benchmark only**, never in the ranking: funding per person vs media attention |
+| [ReliefWeb](https://reliefweb.int) (public RSS) | UN OCHA | **benchmark only**, never in the ranking: reports per country (30 days) = humanitarian-system attention vs media attention |
 | [Open-Meteo](https://open-meteo.com) (ECMWF ERA5, Copernicus DEM) | open weather API | province climate and elevation for project ideas |
 | [HumSet](https://huggingface.co/datasets/nlp-thedeep/humset) | DEEP / Data Friendly Space (Apache-2.0) | **training text only** for the classifiers |
 | [Natural Earth](https://www.naturalearthdata.com) | public domain | map shapes |
@@ -106,7 +108,7 @@ and **0%** to Sudan, DR Congo, Somalia, Syria and Lebanon. See [reports/eda_summ
 |---|---|
 | Put the *silence* idea at the centre, simplify the rest | The app now opens on the **Silence** view. Silence is now **relative to need** (below). The yes/no "ignored" flag became a ratio: *"West: 10% of due coverage"*. |
 | Use GDELT | Western attention now comes from **GDELT 2.0**: 30 days, 274,838 articles, 7,317 outlets (was ~90 RSS items from 3 outlets). |
-| Use ReliefWeb and OCHA FTS | **OCHA FTS** added as a **benchmark only** ("does UN money reach the crises the media ignore?"), never in the ranking, so the ranking stays independent of the UN system. **ReliefWeb is not used**: it is also run by UN OCHA, and its reports would bring UN framing into the ranking. We may add it as a second benchmark in Assignment 3. |
+| Use ReliefWeb and OCHA FTS | Both added as **benchmarks only**, never in the ranking, so the ranking stays independent of the UN system. **ReliefWeb**: does the humanitarian system report on the crises the media ignore? (1,159 reports, 30 days). **OCHA FTS**: does UN money reach them? Results below. |
 | Add Turkish media and compare it with Western media | 8 Turkish outlets from across the political spectrum (TRT Haber, AA, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet) as RSS, plus 1,584 Turkish articles in GDELT. Comparison below. |
 | Test the classifier on Turkish and Arabic | New EN/TR/AR test set and a **language router** in the app (below). |
 | Interview 2–3 NGOs | We could not arrange interviews in this period. In Assignment 3 we replace them with structured **persona tests** (small Turkish NGO, international NGO, journalist, donor) and say clearly that this is a weaker form of user validation. |
@@ -194,6 +196,13 @@ Code: [src/attention_analysis.py](src/attention_analysis.py), 35 countries with 
   visible half **$51.6**, but the visible half also has higher need, so this is a hint, not proof.
 
   ![attention vs funding](reports/figures/attention_vs_funding.png)
+* **Does the humanitarian system see what the media ignore? (ReliefWeb)** ReliefWeb reports follow need much more closely than
+  Western media (Spearman ρ = 0.63, p < 0.001, vs 0.25). Of the 10 most media-silent crises, **6 receive at least half of their
+  fair share of ReliefWeb reports**: DR Congo (3.7× its fair share), Haiti, Sudan, Chad, South Sudan. The aid system reports
+  on them; the media do not. But four are **silent twice**: Madagascar, Timor-Leste, Niger and Burundi are ignored by the media
+  *and* get few humanitarian reports. These are the crises where an NGO can add the most visibility.
+
+  ![media vs ReliefWeb](reports/figures/media_vs_reliefweb.png)
 * **Where is Gaza?** Of stories whose URL names Gaza/Palestine, GDELT located 90% (Western), 96% (Turkish) and 90% (other) **only in Israel**.
   Because the rate is about the same for every group, this is mainly a geocoder effect, not Western bias; but it means any tool that trusts
   GDELT's locations will under-count Palestine. We correct for it. *How* outlets describe the crisis (framing) is our Assignment 3 topic.
@@ -251,7 +260,7 @@ app.py                 Flask server + API
 update.py              daily pipeline
 src/config.py          paths, sector taxonomy, env
 src/sources/           independent.py (UCDP, GHI, IFRC, T4P, EONET), news.py (RSS + gazetteer), live.py (USGS),
-                       gdelt.py (GDELT 2.0 attention), fts.py (OCHA FTS, benchmark only)
+                       gdelt.py (GDELT 2.0 attention), fts.py and reliefweb.py (UN OCHA, benchmarks only)
 src/ingest.py          download everything
 src/sector_model.py    sector classifier
 src/pillar_model.py    casualties / displacement / shock / access classifier
