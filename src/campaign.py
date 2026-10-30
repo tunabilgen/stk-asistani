@@ -66,14 +66,15 @@ def _opencode(system: str, user: str, model: str, timeout: int) -> str:
     with tempfile.TemporaryDirectory() as tmp:
         p = subprocess.run([_opencode_bin(), "run", "-m", model, "--format", "json", prompt],
                            cwd=tmp, env=env, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
-    if p.returncode != 0:
-        raise RuntimeError(p.stderr.strip()[-300:] or f"opencode exit {p.returncode}")
     events = []
     for line in p.stdout.splitlines():
         try:
             events.append(json.loads(line))
         except ValueError:
             pass
+    errors = [e["error"].get("message", "") for e in events if isinstance(e, dict) and e.get("type") == "error"]
+    if p.returncode != 0 or errors:  # e.g. "Free usage limit reached" (HTTP 429) on the free model
+        raise RuntimeError((errors[-1] if errors else p.stderr.strip()[-300:]) or f"opencode exit {p.returncode}")
     return "".join(_texts(events)) or p.stdout
 
 

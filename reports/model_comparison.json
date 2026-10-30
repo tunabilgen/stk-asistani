@@ -148,5 +148,55 @@
   "n_test": 12384,
   "train_seconds": 5215.2,
   "notes": "microsoft/Multilingual-MiniLM-L12-H384, 12,000 training excerpts (CPU budget), 2 epochs"
+ },
+ {
+  "model": "7. LLM zero-shot (opencode/deepseek-v4.1-flash-free)",
+  "micro_f1": 0.8182,
+  "macro_f1": 0.7169,
+  "per_class_f1": {
+   "food": 1.0,
+   "health": 0.917,
+   "wash": 0.667,
+   "shelter": 0.667,
+   "education": 0.4,
+   "protection": 0.947,
+   "nutrition": 1.0,
+   "livelihoods": 0.571,
+   "agriculture": 1.0,
+   "logistics": 0.0
+  },
+  "by_language_macro_f1": {
+   "en": 0.7223,
+   "es": 0.3,
+   "fr": 0.5
+  },
+  "n_test": 37,
+  "train_seconds": 182.5,
+  "notes": "no training; 37 random test excerpts; prompt in src/compare_models.py"
+ },
+ {
+  "model": "4b. TF-IDF + LogReg on the same LLM sample",
+  "micro_f1": 0.7179,
+  "macro_f1": 0.5936,
+  "per_class_f1": {
+   "food": 0.75,
+   "health": 0.833,
+   "wash": 0.667,
+   "shelter": 0.0,
+   "education": 0.4,
+   "protection": 0.714,
+   "nutrition": 1.0,
+   "livelihoods": 0.571,
+   "agriculture": 1.0,
+   "logistics": 0.0
+  },
+  "by_language_macro_f1": {
+   "en": 0.58,
+   "es": 0.3,
+   "fr": 0.4833
+  },
+  "n_test": 37,
+  "train_seconds": 0,
+  "notes": "same excerpts as the LLM row, for a like-for-like comparison"
  }
 ]

@@ -119,7 +119,7 @@ rule for every learned model: per-class thresholds tuned on the validation split
 | 4 | TF-IDF + logistic regression | 0.780 | 0.740 | **used in the app** (EN/FR/ES) |
 | 5 | multilingual sentence embeddings (frozen MiniLM) + LogReg | 0.737 | 0.696 | **used in the app** (TR/AR) |
 | 6 | fine-tuned multilingual MiniLM | 0.413 | 0.422 | CPU only: 12k excerpts, 2 epochs, 73 min |
-| 7 | LLM zero-shot (DeepSeek V4.1 Flash) | _pending_ | | 200 excerpts, compared with model 4 on the same 200 |
+| 7 | LLM zero-shot (DeepSeek V4.1 Flash, free) | 0.818 | 0.717 | **preliminary, 37 excerpts** (free-tier limit); model 4 on the same 37: 0.718 / 0.594 |
 
 ![model comparison](reports/figures/model_comparison.png)
 
@@ -130,6 +130,12 @@ probabilities, which the dashboard and the self-training step need. The frozen s
 because it compresses each excerpt into one 384-number vector. The fine-tuned transformer did badly **because of our
 compute budget, not the method**: on a laptop CPU we could only train on 10% of the data for 2 epochs, and the loss was still
 falling. We report it as a negative result instead of hiding it.
+
+**The LLM.** On the first 37 test excerpts (the free OpenCode model stopped with a usage limit after that), the LLM with no
+training beat our model on the same excerpts by about 10 points (micro-F1 0.82 vs 0.72). 37 is too few to be sure; the run
+resumes from its cache (`python -m src.compare_models llm`) and we will report all 200 in Assignment 3. Even if the LLM is
+more accurate, it is too slow and rate-limited to label thousands of news items a day, so the app uses it only for drafting
+campaigns, where a human checks the output.
 
 ### Turkish and Arabic
 
