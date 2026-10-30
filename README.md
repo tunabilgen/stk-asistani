@@ -111,6 +111,10 @@ and **0%** to Sudan, DR Congo, Somalia, Syria and Lebanon. See [reports/eda_summ
 Same data (HumSet, 10 sectors, multi-label), same official test split (**12,384 expert-labelled excerpts**), and the same
 rule for every learned model: per-class thresholds tuned on the validation split. Code: [src/compare_models.py](src/compare_models.py).
 
+**Metrics.** Each excerpt can belong to several sectors, so accuracy is not meaningful. We use **F1** (balance of precision and
+recall). **Micro-F1** pools all decisions, so frequent sectors (health, protection) dominate it. **Macro-F1** averages the 10
+sectors equally, so it shows whether rare sectors (logistics, agriculture) also work. We also report F1 per language.
+
 | # | approach | micro-F1 | macro-F1 | note |
 |---|---|---|---|---|
 | 1 | keyword rules | 0.558 | 0.539 | no learning, baseline |
@@ -211,6 +215,7 @@ copy .env.example .env            # choose an LLM option (optional, see above)
 python -m src.download_humset      # training data (HumSet, ~125 MB)
 python -m src.ingest              # downloads all sources (~3 min)
 python -m src.sector_model train  # ~5 min
+python -m src.sector_model train-multilingual  # Turkish/Arabic model, ~15 min on CPU
 python -m src.pillar_model train  # ~3 min
 python -m src.build_dashboard
 python app.py                     # → http://localhost:8000
@@ -239,18 +244,23 @@ For a daily refresh run `python update.py`; add `--full` once a week.
 app.py                 Flask server + API
 update.py              daily pipeline
 src/config.py          paths, sector taxonomy, env
-src/sources/           independent.py (UCDP, GHI, IFRC, T4P, EONET), news.py (RSS + gazetteer), live.py (USGS)
+src/sources/           independent.py (UCDP, GHI, IFRC, T4P, EONET), news.py (RSS + gazetteer), live.py (USGS),
+                       gdelt.py (GDELT 2.0 attention), fts.py (OCHA FTS, benchmark only)
 src/ingest.py          download everything
 src/sector_model.py    sector classifier
 src/pillar_model.py    casualties / displacement / shock / access classifier
 src/self_train.py      pseudo-label + human-feedback retraining with F1 guard
 src/features.py        country indicators & scores
 src/partners.py        Red Crescent societies + news-mentioned organisations
-src/campaign.py        LLM campaign + project writer, validator, template fallback
+src/campaign.py        LLM campaign + project writer (OpenCode CLI or API), validator, saved-draft/template fallback
+src/compare_models.py  Assignment 2: 7-model comparison → reports/model_comparison.json
+src/multilingual_eval.py  Assignment 2: EN/TR/AR test set + evaluation
+src/attention_analysis.py Assignment 2: GDELT media attention vs need vs OCHA FTS funding
 src/regions.py         province profiles (violence, climate, elevation, news)
 src/catalog.py         crop–climate table + sustainable project catalogue + matching
 src/build_dashboard.py → web/data/dashboard.json
 src/eda.py             figures + reports/eda_summary.md
 web/                   MapLibre GL map UI
-docs/                  concept note (PDF)
+data/llm_drafts/       saved, labelled LLM campaign drafts (shown when the LLM is unreachable)
+docs/                  concept note, Assignment 1 slides, Assignment 2 video script
 ```

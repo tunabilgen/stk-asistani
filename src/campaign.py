@@ -14,6 +14,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 
 import requests
 
@@ -80,9 +81,31 @@ def _opencode(system: str, user: str, model: str, timeout: int) -> str:
     return "".join(_texts(events)) or p.stdout
 
 
+PAUSE_FILE = ROOT / "data" / "processed" / "llm_pause.json"
+PAUSE_MIN = {"limit": 12 * 60, "timeout": 60}  # skip the LLM after a quota error / timeout so the UI answers at once
+
+
+def _paused_until() -> float:
+    try:
+        return json.loads(PAUSE_FILE.read_text(encoding="utf-8"))["until"]
+    except (OSError, ValueError, KeyError):
+        return 0.0
+
+
 def _chat(system: str, user: str, model: str, temperature: float, max_tokens: int, timeout: int) -> dict:
+    if time.time() < _paused_until():
+        raise RuntimeError(f"paused after a quota/timeout error, retry after "
+                           f"{time.strftime('%H:%M', time.localtime(_paused_until()))}")
     if LLM_ENGINE == "opencode":
-        text = _opencode(system, user, model, timeout)
+        try:
+            text = _opencode(system, user, model, timeout)
+        except Exception as e:
+            kind = "timeout" if isinstance(e, subprocess.TimeoutExpired) else "limit" if "limit" in str(e).lower() else None
+            if kind:  # the free OpenCode quota resets after about 12 hours
+                PAUSE_FILE.parent.mkdir(parents=True, exist_ok=True)
+                PAUSE_FILE.write_text(json.dumps({"until": time.time() + PAUSE_MIN[kind] * 60, "reason": str(e)[:200]}),
+                                      encoding="utf-8")
+            raise
     else:
         r = requests.post(
             LLM_BASE_URL.rstrip("/") + "/chat/completions",
