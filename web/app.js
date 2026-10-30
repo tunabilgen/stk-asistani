@@ -12,6 +12,7 @@ const I18N = {
     ignoredShort: "Batı medyası görmüyor", exclShort: "Kapsam dışı",
     profileBased: "merkezli", edit: "Düzenle", noSectors: "alan seçilmedi",
     direct: "Doğrudan müdahale", partner: "Ortak üzerinden", ignored: "Batı medyası görmüyor",
+    covShort: "Batı: hak ettiğinin %{p}", covTip: "İhtiyaca göre Batı ana akım medyasında görünürlük: dış haberlerdeki payı ÷ ihtiyacının gerektirdiği pay (GDELT, 30 gün). %100 = ihtiyacı oranında haber.",
     st_worsening: "Kötüleşiyor", st_easing_ongoing: "Azaldı ama sürüyor", st_chronic: "Kronik", st_improving: "İyileşiyor",
     excluded: "STK politikası gereği kapsam dışı", noneWorsening: "Şu an kötüleşen kriz yok.",
     updated: "Veri", score: "skor", rankOf: "sıra",
@@ -83,6 +84,7 @@ const I18N = {
     ignoredShort: "Ignored by Western media", exclShort: "Out of scope",
     profileBased: "based", edit: "Edit", noSectors: "no sectors selected",
     direct: "Direct response", partner: "Via partner", ignored: "Ignored by Western media",
+    covShort: "West: {p}% of due coverage", covTip: "Western mainstream coverage relative to need: its share of their foreign news ÷ the share its need warrants (GDELT, 30 days). 100% = covered in proportion to need.",
     st_worsening: "Worsening", st_easing_ongoing: "Easing but ongoing", st_chronic: "Chronic", st_improving: "Improving",
     excluded: "Out of scope by NGO policy", noneWorsening: "No worsening crisis right now.",
     updated: "Data", score: "score", rankOf: "rank",
@@ -326,6 +328,13 @@ function statusEl(c) {
   const st = c.trend?.status;
   return SHOWN_STATUS.has(st) ? `<span class="status st-${st}">${t("st_" + st)}</span>` : "";
 }
+// Western coverage relative to the need's fair share, instead of a yes/no "ignored" label
+function coverageEl(c) {
+  const r = c.coverage_ratio;
+  if (r == null || r >= 1 || (c.score?.protracted ?? 0) < 0.3) return "";
+  const pct = r < 0.095 ? Math.round(r * 100) : Math.round(r * 10) * 10;
+  return `<span class="flag ${c.forgotten ? "ignored" : "covlow"}" title="${t("covTip")}">${t("covShort").replace("{p}", Math.max(pct, 1))}</span>`;
+}
 
 function renderProfileLine() {
   const home = S.byIso[S.profile.home];
@@ -349,7 +358,7 @@ function renderRanking() {
     return `<li data-iso="${iso}" class="${S.selected === iso ? "sel" : ""}">
       <span class="pos num">${i + 1}</span>
       <div style="min-width:0"><div class="nm">${esc(cname(c))}</div>
-        <div class="sub">${statusEl(c)}${c.forgotten ? `<span class="flag ignored">${t("ignored")}</span>` : ""}</div></div>
+        <div class="sub">${statusEl(c)}${coverageEl(c)}</div></div>
       <span class="score num">${sc.s}</span>
       <div class="meter"><i style="width:${sc.s}%"></i></div></li>`;
   }).join("") : `<li class="empty">${t("noneWorsening")}</li>`;
@@ -412,7 +421,7 @@ function renderDetail() {
   box.innerHTML = `<div class="d-head">
       <div class="d-title"><h1>${esc(cname(c))}</h1>
         <div class="d-score">${sc.excluded ? "" : `<div class="v num">${sc.s ?? "—"}</div><div class="l">${t("score")}${pos ? ` · ${t("rankOf")} ${pos}` : ""}</div>`}</div></div>
-      <div class="d-sub">${statusEl(c)}${c.forgotten ? `<span class="flag ignored">${t("ignored")}</span>` : ""}
+      <div class="d-sub">${statusEl(c)}${coverageEl(c)}
         ${sc.excluded ? `<span class="flag">${t("excluded")}</span>` : `<span>${t(sc.direct ? "direct" : "partner")}</span>`}
         ${sc.dist != null ? `<span class="muted">${t("distance")} ${n0(sc.dist)} ${t("km")}</span>` : ""}</div>
       <div class="d-actions"><button class="btn primary" id="campBtn" ${sc.excluded ? "disabled" : ""}>${t("makeCampaign")}</button>

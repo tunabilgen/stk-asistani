@@ -7,7 +7,7 @@ Approaches (all multi-label, 10 sectors, evaluated on the official HumSet test s
   4. TF-IDF + logistic regression     — the model used in the prototype
   5. multilingual sentence embeddings (frozen transformer) + logistic regression
   6. fine-tuned multilingual transformer (MiniLM, CPU, training subset)
-  7. LLM zero-shot (DeepSeek via OpenRouter, 200 test excerpts)
+  7. LLM zero-shot (DeepSeek V4.1 Flash via the OpenCode CLI or an API, 200 test excerpts)
 
 Every learned model gets per-class thresholds tuned on the validation split (same rule for all).
 
@@ -29,7 +29,8 @@ from sklearn.naive_bayes import ComplementNB
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.svm import LinearSVC
 
-from src.config import FIGURES, LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, PROCESSED, ROOT, SECTORS, USER_AGENT
+from src.config import (FIGURES, LLM_API_KEY, LLM_BASE_URL, LLM_ENGINE, LLM_MODEL, OPENCODE_MODEL, PROCESSED,
+                        ROOT, SECTORS, USER_AGENT)
 from src.sector_model import LABELS, build_pipeline, keyword_predict, load_split, tune_thresholds
 
 OUT = ROOT / "reports" / "model_comparison.json"
@@ -185,10 +186,24 @@ Excerpt:
 \"\"\"{text}\"\"\""""
 
 
-def llm(n=200):
+def _ask_llm(prompt: str) -> str:
+    """One zero-shot call through the same back-end the app uses (OpenCode CLI or an OpenAI-compatible API)."""
+    if LLM_ENGINE == "opencode":
+        from src.campaign import _opencode
+        return _opencode("", prompt, OPENCODE_MODEL, timeout=180)
     import requests
-    if not LLM_API_KEY:
-        sys.exit("No LLM_API_KEY in .env — add your OpenRouter key first.")
+    r = requests.post(LLM_BASE_URL.rstrip("/") + "/chat/completions", timeout=90,
+                      headers={"Authorization": f"Bearer {LLM_API_KEY}", "User-Agent": USER_AGENT},
+                      json={"model": LLM_MODEL, "temperature": 0, "messages": [{"role": "user", "content": prompt}]})
+    r.raise_for_status()
+    return r.json()["choices"][0]["message"]["content"]
+
+
+def llm(n=200):
+    from src.campaign import llm_available, llm_models
+    if not llm_available():
+        sys.exit("No LLM: install OpenCode + `opencode auth login` and set LLM_ENGINE=opencode, or add LLM_API_KEY.")
+    model_name = llm_models()[0]
     tr, va, te, ytr, yva, yte = _data()
     idx = np.random.default_rng(SEED).choice(len(te), size=n, replace=False)
     sub, ysub = te.iloc[idx].reset_index(drop=True), yte[idx]
@@ -201,12 +216,7 @@ def llm(n=200):
         if k in cache:
             continue
         try:
-            r = requests.post(LLM_BASE_URL.rstrip("/") + "/chat/completions", timeout=90,
-                              headers={"Authorization": f"Bearer {LLM_API_KEY}", "User-Agent": USER_AGENT},
-                              json={"model": LLM_MODEL, "temperature": 0,
-                                    "messages": [{"role": "user", "content": LLM_PROMPT.format(keys=keys, text=row["text"][:2000])}]})
-            r.raise_for_status()
-            cache[k] = r.json()["choices"][0]["message"]["content"]
+            cache[k] = _ask_llm(LLM_PROMPT.format(keys=keys, text=row["text"][:2000]))
         except Exception as e:
             fails += 1; print("fail", i, str(e)[:120])
             continue
@@ -223,7 +233,7 @@ def llm(n=200):
     # the same 200 excerpts scored with the prototype model, for a fair side-by-side
     from src.sector_model import predict
     ylr = np.array([[1 if s in p["sectors"] else 0 for s in LABELS] for p in predict(sub.loc[keep, "text"].tolist())])
-    _save([_scores(f"7. LLM zero-shot ({LLM_MODEL})", ysub[keep], yhat, sub.loc[keep], time.time() - t0,
+    _save([_scores(f"7. LLM zero-shot ({model_name})", ysub[keep], yhat, sub.loc[keep], time.time() - t0,
                    f"no training; {len(keep)} random test excerpts; prompt in src/compare_models.py", len(keep)),
            _scores("4b. TF-IDF + LogReg on the same LLM sample", ysub[keep], ylr, sub.loc[keep], 0,
                    "same excerpts as the LLM row, for a like-for-like comparison", len(keep))])

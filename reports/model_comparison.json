@@ -123,5 +123,30 @@
   "n_test": 12384,
   "train_seconds": 2531.1,
   "notes": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, 384-d sentence vectors, max 128 tokens"
+ },
+ {
+  "model": "6. Fine-tuned multilingual MiniLM (transformer)",
+  "micro_f1": 0.4134,
+  "macro_f1": 0.4225,
+  "per_class_f1": {
+   "food": 0.592,
+   "health": 0.745,
+   "wash": 0.317,
+   "shelter": 0.191,
+   "education": 0.769,
+   "protection": 0.487,
+   "nutrition": 0.581,
+   "livelihoods": 0.319,
+   "agriculture": 0.17,
+   "logistics": 0.055
+  },
+  "by_language_macro_f1": {
+   "en": 0.4181,
+   "es": 0.379,
+   "fr": 0.4216
+  },
+  "n_test": 12384,
+  "train_seconds": 5215.2,
+  "notes": "microsoft/Multilingual-MiniLM-L12-H384, 12,000 training excerpts (CPU budget), 2 epochs"
  }
 ]

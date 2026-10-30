@@ -27,7 +27,7 @@
 > "For each province the tool matches climate, security and project types. In Herat it suggests a saffron and pomegranate cooperative; in Kabul, with recent violence, emergency aid instead."
 
 **2:10 – 2:40 · Models** *(switch to the README on GitHub, scroll to the model comparison chart)*
-> "We compared seven approaches on 12,000 expert-labelled test texts: keyword rules, Naive Bayes, SVM, logistic regression, a multilingual transformer and an LLM. The linear models are as accurate as the transformer here and retrain in a minute, so the app keeps TF-IDF with logistic regression. For Turkish and Arabic news, which the old model cannot read, the multilingual transformer does much better. All results and code are on GitHub. Thank you."
+> "We compared seven approaches on 12,000 expert-labelled test texts: keyword rules, Naive Bayes, SVM, logistic regression, multilingual embeddings, a fine-tuned transformer and an LLM. The linear models were best, about 0.78 F1, and retrain in a minute. Fine-tuning on a laptop CPU was too limited, and we report that honestly. But our old model could not read Turkish or Arabic: only 0.34 and 0.20. So the app now detects the language and uses a multilingual model for Turkish and Arabic, which reaches 0.70. All results and code are on GitHub. Thank you."
 
 ---
 
