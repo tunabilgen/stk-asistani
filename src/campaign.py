@@ -31,8 +31,17 @@ _OPENCODE_CONFIG = json.dumps({"$schema": "https://opencode.ai/config.json",
 NO_LLM = "No LLM configured (.env: LLM_API_KEY, or LLM_ENGINE=opencode with OpenCode installed); template used."
 
 
+def _opencode_bin() -> str | None:
+    """The opencode CLI: OPENCODE_BIN, then PATH, then the copy bundled with OpenCode Desktop on Windows."""
+    bundled = os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "ai.opencode.desktop", "resources", "opencode-cli.exe")
+    for c in (os.getenv("OPENCODE_BIN"), shutil.which("opencode"), bundled):
+        if c and os.path.isfile(c):
+            return c
+    return None
+
+
 def llm_available() -> bool:
-    return bool(shutil.which("opencode")) if LLM_ENGINE == "opencode" else bool(LLM_API_KEY)
+    return bool(_opencode_bin()) if LLM_ENGINE == "opencode" else bool(LLM_API_KEY)
 
 
 def llm_models() -> list[str]:
@@ -55,7 +64,7 @@ def _opencode(system: str, user: str, model: str, timeout: int) -> str:
     prompt = f"{system}\n\nDo not use any tools. Reply with the JSON only.\n\n{user}"
     env = {**os.environ, "OPENCODE_CONFIG_CONTENT": _OPENCODE_CONFIG}
     with tempfile.TemporaryDirectory() as tmp:
-        p = subprocess.run([shutil.which("opencode"), "run", "-m", model, "--format", "json", prompt],
+        p = subprocess.run([_opencode_bin(), "run", "-m", model, "--format", "json", prompt],
                            cwd=tmp, env=env, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
     if p.returncode != 0:
         raise RuntimeError(p.stderr.strip()[-300:] or f"opencode exit {p.returncode}")

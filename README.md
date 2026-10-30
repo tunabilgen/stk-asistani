@@ -187,11 +187,9 @@ Code: [src/attention_analysis.py](src/attention_analysis.py), 35 countries with 
 The campaign and project drafts use **DeepSeek V4.1 Flash**. The default is the free model on **OpenCode Zen**, called through the
 official OpenCode command-line tool (`opencode run`), so the repository contains no key at all:
 
-```bash
-npm i -g opencode-ai        # or see opencode.ai
-opencode auth login         # you log in yourself; the key stays in OpenCode
-# then in .env:  LLM_ENGINE=opencode
-```
+1. Install **OpenCode Desktop** (opencode.ai) or the CLI (`npm i -g opencode-ai`). On Windows the app finds the CLI
+   bundled with the desktop app automatically; elsewhere set `OPENCODE_BIN` if `opencode` is not on PATH.
+2. Put `LLM_ENGINE=opencode` in `.env`. The free model needed no login in our tests; for paid models run `opencode auth login`.
 
 Alternatives in [.env.example](.env.example): OpenCode Go or OpenRouter (key in your local `.env`, which git ignores).
 Without any LLM the app falls back to a template.
