@@ -1,6 +1,7 @@
 """Humanitarian sector classifier (multi-label) trained on HumSet.
 
 Usage:  python -m src.sector_model train      # train + evaluate, writes models/
+        python -m src.sector_model train-multilingual
         python -m src.sector_model predict "Cholera cases rise in displacement camps"
 """
 import json
@@ -137,6 +138,40 @@ def train(extra_train: pd.DataFrame | None = None, model_path=MODEL_PATH,
 
 
 _cache = {}
+ML_MODEL_PATH = MODELS / "sector_clf_multilingual.joblib"
+EMB_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+_TR = re.compile(r"[ğşıİĞŞ]|\b(?i:ve|bir|için|ile|olarak|değil|göre)\b")  # no global re.I: "İ" would match "i"
+_AR = re.compile(r"[؀-ۿ]")
+
+
+def detect_lang(text: str) -> str:
+    """Coarse script/word check: 'ar', 'tr' or 'latin' (EN/FR/ES, the languages HumSet covers)."""
+    if len(_AR.findall(text)) > 10:
+        return "ar"
+    return "tr" if len(_TR.findall(text)) >= 3 else "latin"
+
+
+def train_multilingual():
+    """Frozen multilingual sentence embeddings + logistic regression (Assignment 2 model comparison).
+
+    Slightly below TF-IDF on EN/FR/ES (macro-F1 0.70 vs 0.74) but works on languages missing from
+    HumSet: micro-F1 0.70 on Turkish and Arabic vs 0.34 / 0.20 for TF-IDF (src/multilingual_eval.py).
+    """
+    from sentence_transformers import SentenceTransformer
+    mlb = MultiLabelBinarizer(classes=LABELS)
+    tr, va = load_split("train"), load_split("validation")
+    enc = SentenceTransformer(EMB_MODEL, device="cpu")
+    enc.max_seq_length = 128
+    emb = {}
+    for name, d in (("train", tr), ("val", va)):  # reuse embeddings cached by src.compare_models
+        p = PROCESSED / f"emb_{name}.npy"
+        emb[name] = np.load(p) if p.exists() else enc.encode(d["text"].tolist(), batch_size=128,
+                                                              normalize_embeddings=True, show_progress_bar=True)
+    clf = OneVsRestClassifier(LogisticRegression(C=2.0, class_weight="balanced", max_iter=2000))
+    clf.fit(emb["train"], mlb.fit_transform(tr["labels"]))
+    thr = tune_thresholds(mlb.transform(va["labels"]), clf.predict_proba(emb["val"]))
+    joblib.dump({"clf": clf, "thresholds": thr, "labels": LABELS, "encoder": EMB_MODEL}, ML_MODEL_PATH)
+    print("saved", ML_MODEL_PATH)
 
 
 def load():
@@ -145,20 +180,48 @@ def load():
     return _cache["m"]
 
 
+def _proba_multilingual(texts: list[str]):
+    if "ml" not in _cache:
+        from sentence_transformers import SentenceTransformer
+        m = joblib.load(ML_MODEL_PATH)
+        enc = SentenceTransformer(m["encoder"], device="cpu")
+        enc.max_seq_length = 128
+        _cache["ml"] = (m, enc)
+    m, enc = _cache["ml"]
+    return m, m["clf"].predict_proba(enc.encode(texts, batch_size=64, normalize_embeddings=True))
+
+
 def predict(texts: list[str]) -> list[dict]:
-    """Return {sector: probability} and the list of sectors above threshold, per text."""
+    """Return {sector: probability}, the sectors above threshold and the model used, per text.
+
+    Language router: TF-IDF + logistic regression for EN/FR/ES (best there); the multilingual
+    embedding model for Turkish and Arabic, which TF-IDF cannot read (if that model is trained).
+    """
     m = load()
-    proba = m["clf"].predict_proba(m["vec"].transform(texts))
-    out = []
-    for row in proba:
-        out.append({"proba": {k: round(float(p), 3) for k, p in zip(m["labels"], row)},
-                    "sectors": [k for k, p, t in zip(m["labels"], row, m["thresholds"]) if p >= t]})
+    langs = [detect_lang(t) for t in texts]
+    out = [None] * len(texts)
+    ml_idx = [i for i, l in enumerate(langs) if l != "latin"] if ML_MODEL_PATH.exists() else []
+    groups = [(m, [i for i in range(len(texts)) if i not in set(ml_idx)], "tfidf")]
+    if ml_idx:
+        mm, pr = _proba_multilingual([texts[i] for i in ml_idx])
+        groups.append((mm, ml_idx, "multilingual", pr))
+    for g in groups:
+        model, idx, name = g[0], g[1], g[2]
+        if not idx:
+            continue
+        proba = g[3] if len(g) > 3 else model["clf"].predict_proba(model["vec"].transform([texts[i] for i in idx]))
+        for i, row in zip(idx, proba):
+            out[i] = {"proba": {k: round(float(p), 3) for k, p in zip(model["labels"], row)},
+                      "sectors": [k for k, p, t in zip(model["labels"], row, model["thresholds"]) if p >= t],
+                      "model": name, "lang": langs[i]}
     return out
 
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["train"]:
         train()
+    elif sys.argv[1:2] == ["train-multilingual"]:
+        train_multilingual()
     elif sys.argv[1:2] == ["predict"]:
         for t, r in zip(sys.argv[2:], predict(sys.argv[2:])):
             top = sorted(r["proba"].items(), key=lambda x: -x[1])[:3]

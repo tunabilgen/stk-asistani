@@ -5,14 +5,85 @@ is passed in a FACTS block built from UCDP, GHI, IFRC, Tech for Palestine and in
   - partner organisations must come from the candidate list (no invented NGOs),
   - every number in the output must appear in the facts (no invented statistics),
   - sources must be URLs we supplied.
-If no API key is configured, or the call fails, a deterministic template is used instead.
+If no LLM is configured, or the call fails, a deterministic template is used instead.
+Two LLM back-ends (LLM_ENGINE in .env): any OpenAI-compatible API, or the local OpenCode CLI.
 """
 import json
+import os
 import re
+import shutil
+import subprocess
+import tempfile
 
 import requests
 
-from src.config import LLM_API_KEY, LLM_BASE_URL, LLM_FALLBACK_MODELS, LLM_MODEL, SECTORS
+from src.config import (LLM_API_KEY, LLM_BASE_URL, LLM_ENGINE, LLM_FALLBACK_MODELS, LLM_MODEL, OPENCODE_MODEL,
+                        SECTORS, USER_AGENT)
+
+# OpenCode is a coding agent; for pure text generation every tool is switched off and it runs in an
+# empty temporary folder, so the model cannot read or change any file.
+_OPENCODE_CONFIG = json.dumps({"$schema": "https://opencode.ai/config.json",
+                               "permission": {"edit": "deny", "bash": "deny", "webfetch": "deny"},
+                               "tools": {"bash": False, "edit": False, "write": False, "read": False, "grep": False,
+                                         "glob": False, "list": False, "patch": False, "webfetch": False}})
+
+
+NO_LLM = "No LLM configured (.env: LLM_API_KEY, or LLM_ENGINE=opencode with OpenCode installed); template used."
+
+
+def llm_available() -> bool:
+    return bool(shutil.which("opencode")) if LLM_ENGINE == "opencode" else bool(LLM_API_KEY)
+
+
+def llm_models() -> list[str]:
+    return [OPENCODE_MODEL] if LLM_ENGINE == "opencode" else [LLM_MODEL, *LLM_FALLBACK_MODELS]
+
+
+def _texts(obj):
+    """Collect assistant text parts from OpenCode's JSON event stream."""
+    if isinstance(obj, dict):
+        if obj.get("type") == "text" and isinstance(obj.get("text"), str):
+            yield obj["text"]
+        for v in obj.values():
+            yield from _texts(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _texts(v)
+
+
+def _opencode(system: str, user: str, model: str, timeout: int) -> str:
+    prompt = f"{system}\n\nDo not use any tools. Reply with the JSON only.\n\n{user}"
+    env = {**os.environ, "OPENCODE_CONFIG_CONTENT": _OPENCODE_CONFIG}
+    with tempfile.TemporaryDirectory() as tmp:
+        p = subprocess.run([shutil.which("opencode"), "run", "-m", model, "--format", "json", prompt],
+                           cwd=tmp, env=env, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
+    if p.returncode != 0:
+        raise RuntimeError(p.stderr.strip()[-300:] or f"opencode exit {p.returncode}")
+    events = []
+    for line in p.stdout.splitlines():
+        try:
+            events.append(json.loads(line))
+        except ValueError:
+            pass
+    return "".join(_texts(events)) or p.stdout
+
+
+def _chat(system: str, user: str, model: str, temperature: float, max_tokens: int, timeout: int) -> dict:
+    if LLM_ENGINE == "opencode":
+        text = _opencode(system, user, model, timeout)
+    else:
+        r = requests.post(
+            LLM_BASE_URL.rstrip("/") + "/chat/completions",
+            headers={"Authorization": f"Bearer {LLM_API_KEY}", "Content-Type": "application/json",
+                     "X-Title": "STK Asistani", "User-Agent": USER_AGENT},
+            json={"model": model, "temperature": temperature, "max_tokens": max_tokens,
+                  "response_format": {"type": "json_object"},
+                  "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]},
+            timeout=timeout)
+        r.raise_for_status()
+        text = r.json()["choices"][0]["message"]["content"]
+    text = re.sub(r"^```(json)?|```$", "", text.strip(), flags=re.M)
+    return json.loads(text[text.find("{"): text.rfind("}") + 1])
 
 SYSTEM = """You are "STK Asistanı", a humanitarian programming assistant for NGOs (STK).
 Write a campaign recommendation for the NGO, using ONLY the facts in the FACTS block.
@@ -71,20 +142,8 @@ def build_facts(country: dict, ngo: dict, sectors: list[str], mode: str, events:
 
 
 def _call_llm(facts: dict, lang: str, model: str) -> dict:
-    r = requests.post(
-        LLM_BASE_URL.rstrip("/") + "/chat/completions",
-        headers={"Authorization": f"Bearer {LLM_API_KEY}", "Content-Type": "application/json",
-                 "X-Title": "STK Asistani"},  # OpenRouter app attribution (optional)
-        json={"model": model, "temperature": 0.3, "max_tokens": 2500,
-              "response_format": {"type": "json_object"},
-              "messages": [{"role": "system", "content": SYSTEM},
-                           {"role": "user", "content": f"LANGUAGE: {lang}\nFACTS:\n"
-                            + json.dumps(facts, ensure_ascii=False, default=str)}]},
-        timeout=120)
-    r.raise_for_status()
-    text = r.json()["choices"][0]["message"]["content"]
-    text = re.sub(r"^```(json)?|```$", "", text.strip(), flags=re.M)
-    return json.loads(text)
+    return _chat(SYSTEM, f"LANGUAGE: {lang}\nFACTS:\n" + json.dumps(facts, ensure_ascii=False, default=str),
+                 model, 0.3, 2500, 180)
 
 
 def _numbers(s: str) -> set[str]:
@@ -170,9 +229,9 @@ def template(facts: dict, lang: str) -> dict:
 def generate(country, ngo, sectors, mode, events, lang="tr") -> dict:
     facts = build_facts(country, ngo, sectors, mode, events)
     engine, warn = "template", []
-    if LLM_API_KEY:
+    if llm_available():
         out = None
-        for model in [LLM_MODEL, *LLM_FALLBACK_MODELS]:
+        for model in llm_models():
             try:
                 out = _call_llm(facts, lang, model)
                 engine = model
@@ -183,7 +242,7 @@ def generate(country, ngo, sectors, mode, events, lang="tr") -> dict:
             warn.append("All LLMs failed; template used.")
             out = template(facts, lang)
     else:
-        warn.append("No LLM API key configured (.env); template used.")
+        warn.append(NO_LLM)
         out = template(facts, lang)
     warn += validate(out, facts)
     return {"campaign": out, "engine": engine, "warnings": warn, "facts": facts}
@@ -286,27 +345,17 @@ def project_template(f: dict, key: str, lang: str) -> dict:
 def generate_project(country, province, project_key, ngo, sectors, field_note, lang="tr") -> dict:
     facts = build_project_facts(country, province, project_key, ngo, sectors, field_note, lang)
     engine, warn, out = "template", [], None
-    if LLM_API_KEY:
-        for model in [LLM_MODEL, *LLM_FALLBACK_MODELS]:
+    if llm_available():
+        for model in llm_models():
             try:
-                r = requests.post(
-                    LLM_BASE_URL.rstrip("/") + "/chat/completions",
-                    headers={"Authorization": f"Bearer {LLM_API_KEY}", "Content-Type": "application/json",
-                             "X-Title": "STK Asistani"},
-                    json={"model": model, "temperature": 0.4, "max_tokens": 3500,
-                          "response_format": {"type": "json_object"},
-                          "messages": [{"role": "system", "content": PROJECT_SYSTEM},
-                                       {"role": "user", "content": f"LANGUAGE: {lang}\nFACTS:\n"
-                                        + json.dumps(facts, ensure_ascii=False, default=str)}]},
-                    timeout=180)
-                r.raise_for_status()
-                text = re.sub(r"^```(json)?|```$", "", r.json()["choices"][0]["message"]["content"].strip(), flags=re.M)
-                out, engine = json.loads(text), model
+                out = _chat(PROJECT_SYSTEM, f"LANGUAGE: {lang}\nFACTS:\n"
+                            + json.dumps(facts, ensure_ascii=False, default=str), model, 0.4, 3500, 240)
+                engine = model
                 break
             except Exception as e:
                 warn.append(f"{model} unavailable ({type(e).__name__}: {str(e)[:100]})")
     else:
-        warn.append("No LLM API key configured (.env); template used.")
+        warn.append(NO_LLM)
     if out is None:
         out = project_template(facts, project_key, lang)
     urls = {n["url"] for n in facts["province_facts"]["recent_news_naming_province"]}

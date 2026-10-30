@@ -24,3 +24,6 @@ models/self_train_run*.txt
 
 # course documents (contain classmates' names and e-mails) - never publish
 *.docx
+
+# run logs
+reports/_*.log

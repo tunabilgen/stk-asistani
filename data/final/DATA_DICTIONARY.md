@@ -1,6 +1,6 @@
 # Data dictionary — `country_crisis_dataset.csv`
 
-One row per country (177 rows), built by `src/build_dashboard.py` on 2026-10-16. See `notebooks/01_dataset_and_preprocessing.ipynb` for every step.
+One row per country (177 rows), built by `src/build_dashboard.py` on 2026-10-30. See `notebooks/01_dataset_and_preprocessing.ipynb` for every step.
 
 | column | description |
 |---|---|
@@ -24,6 +24,9 @@ One row per country (177 rows), built by `src/build_dashboard.py` on 2026-10-16.
 | aid_per_person | humanitarian aid per person in severe need (USD/year), recognised crises only |
 | news_independent | news items, last 30 days, 15 independent outlets |
 | news_western | news items, last 30 days, BBC/Guardian/NYT |
+| gdelt_western | GDELT, 30 days: articles by 24 Western mainstream outlets about this country (USA/UK stories excluded) |
+| gdelt_turkish | GDELT, 30 days: articles by Turkish outlets about this country (Türkiye stories excluded) |
+| gdelt_all | GDELT, 30 days: articles by all outlets (excl. domestic stories of Western/Turkish outlets) |
 | recent_monthly | mean conflict deaths per month, last 3 months |
 | base_monthly | median conflict deaths per month, 12 months before |
 | trend_ratio | (recent+5)/(base+5) |
@@ -41,5 +44,8 @@ One row per country (177 rows), built by `src/build_dashboard.py` on 2026-10-16.
 | n_att_indep | independent media attention 0-1 |
 | n_prot | protracted suffering 0-1 |
 | escalation | worsening bonus 0-1 |
-| ignored_by_western_media | flag |
-| silence | silence index 0-1 |
+| att_share_western | share of Western outlets' foreign-news articles about this country |
+| need_share | this country's share of total need (max of protracted and recent-violence components) |
+| coverage_ratio | att_share_western / need_share: 1 = covered in proportion to need, <1 = under-covered |
+| ignored_by_western_media | flag: protracted need >= 0.4 and coverage_ratio < 1/3 |
+| silence | silence index 0-1 = need x (1 - min(coverage_ratio, 1)) |

@@ -266,6 +266,21 @@ def conflict_news_scores(news_df: pd.DataFrame) -> pd.Series:
     return (per_source.groupby(level=0).sum() / 4.0).clip(upper=1.0)
 
 
+def gdelt_attention() -> pd.DataFrame:
+    """Articles per event country and media group from GDELT (30 days, src/sources/gdelt.py).
+
+    Foreign coverage only: Western outlets' stories about the USA/UK and Turkish outlets'
+    stories about Türkiye are domestic news and are not counted as attention.
+    """
+    p = PROCESSED / "gdelt_articles.parquet"
+    if not p.exists():
+        return pd.DataFrame()
+    a = pd.read_parquet(p)
+    home = {"western": {"USA", "GBR"}, "turkish": {"TUR"}}
+    a = a[~a.apply(lambda r: r["iso3"] in home.get(r["group"], ()), axis=1)]
+    return a.groupby(["iso3", "group"])["url"].nunique().unstack(fill_value=0)
+
+
 def attention(news_df: pd.DataFrame) -> pd.DataFrame:
     if news_df.empty:
         return pd.DataFrame()

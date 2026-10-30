@@ -30,6 +30,10 @@ LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-v4.1-flash")
 # tried in order if the main model fails (e.g. no credit) — ":free" models cost nothing
 LLM_FALLBACK_MODELS = [m for m in os.getenv(
     "LLM_FALLBACK_MODELS", "google/gemma-4-31b-it:free").split(",") if m.strip()]
+# "api" = OpenAI-compatible HTTP endpoint above; "opencode" = run the official OpenCode CLI locally
+# (`opencode run`), which is how OpenCode Zen's free models may be used. No key in .env needed then.
+LLM_ENGINE = os.getenv("LLM_ENGINE", "api").lower()
+OPENCODE_MODEL = os.getenv("OPENCODE_MODEL", "opencode/deepseek-v4.1-flash-free")
 LLM_API_KEY = os.getenv("LLM_API_KEY") or os.getenv("OPENROUTER_API_KEY") \
     or os.getenv("OPENCODE_API_KEY", "")
 

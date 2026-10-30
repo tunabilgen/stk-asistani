@@ -13,7 +13,7 @@ from pathlib import Path
 from flask import Flask, jsonify, request, send_from_directory
 
 from src import campaign
-from src.config import DATA, LLM_API_KEY, LLM_MODEL, SECTORS, WEB_DATA
+from src.config import DATA, SECTORS, WEB_DATA
 
 WEB = Path(__file__).parent / "web"
 app = Flask(__name__, static_folder=None)
@@ -36,7 +36,7 @@ def static_files(p):
 
 @app.get("/api/status")
 def status():
-    return jsonify({"llm": LLM_MODEL if LLM_API_KEY else None})
+    return jsonify({"llm": campaign.llm_models()[0] if campaign.llm_available() else None})
 
 
 @app.post("/api/campaign")

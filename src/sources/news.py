@@ -37,6 +37,16 @@ FEEDS = {
     "BBC World": ("western", "https://feeds.bbci.co.uk/news/world/rss.xml"),
     "The Guardian": ("western", "https://www.theguardian.com/world/rss"),
     "New York Times": ("western", "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"),
+    # Turkish-language media (what Turkish NGOs read), across the political spectrum; used for the
+    # Turkish-vs-Western coverage comparison. Sector labels via the multilingual model.
+    "TRT Haber": ("turkish", "https://www.trthaber.com/dunya_articles.rss"),
+    "AA Türkçe": ("turkish", "https://www.aa.com.tr/tr/rss/default?cat=dunya"),
+    "Hürriyet": ("turkish", "https://www.hurriyet.com.tr/rss/dunya"),
+    "Yeni Şafak (TR)": ("turkish", "https://www.yenisafak.com/rss?xml=dunya"),
+    "Sabah": ("turkish", "https://www.sabah.com.tr/rss/dunya.xml"),
+    "Cumhuriyet": ("turkish", "https://www.cumhuriyet.com.tr/rss/son_dakika.xml"),
+    "BirGün": ("turkish", "https://www.birgun.net/rss/home"),
+    "bianet": ("turkish", "https://bianet.org/biamag.rss"),
 }
 
 
@@ -87,7 +97,7 @@ def fetch_all() -> list[dict]:
 PLACES = {  # crisis places & regions -> ISO3 (extend freely)
     "PSE": ["gaza", "west bank", "rafah", "khan younis", "khan yunis", "jabalia", "jenin", "nablus",
             "tulkarem", "deir al-balah", "nuseirat", "hebron", "ramallah", "palestine", "palestinian territor"],
-    "SDN": ["(?<!south )sudan", "darfur", "el fasher", "al-fashir", "khartoum", "kordofan", "omdurman", "port sudan",
+    "SDN": ["(?<!south )(?<!güney )sudan", "darfur", "el fasher", "al-fashir", "khartoum", "kordofan", "omdurman", "port sudan",
             "el obeid", "gezira", "zamzam", "tawila", "kadugli", "dilling"],
     "SSD": ["south sudan", "juba", "upper nile", "jonglei", "malakal"],
     "AFG": ["afghanistan", "kabul", "herat", "kandahar", "badakhshan", "balkh", "nangarhar"],
@@ -107,7 +117,7 @@ PLACES = {  # crisis places & regions -> ISO3 (extend freely)
     "IRN": ["iran", "tehran"],
     "PAK": ["pakistan", "khyber pakhtunkhwa", "balochistan", "karachi", "lahore", "islamabad"],
     "IND": ["india", "kashmir", "manipur", "new delhi"],
-    "MLI": ["mali", "bamako", "timbuktu", "gao"],
+    "MLI": ["(?-i:Mali)", "bamako", "timbuktu", "gao"],  # case-sensitive: Turkish "mali" = financial
     "BFA": ["burkina faso", "ouagadougou"],
     "NER": ["niger", "niamey"],
     "NGA": ["nigeria", "borno", "zamfara", "abuja", "lagos", "maiduguri"],
@@ -133,6 +143,26 @@ PLACES = {  # crisis places & regions -> ISO3 (extend freely)
     "SAU": ["saudi arabia"], "QAT": ["qatar"], "ARE": ["united arab emirates", "uae"],
     "BIH": ["bosnia"], "XKX": ["kosovo"],
 }
+# Turkish exonyms (Turkish-language feeds); dotted capital İ is listed explicitly
+TR_PLACES = {
+    "PSE": ["filistin", "gazze", "batı şeria", "refah", "han yunus", "cenin", "nablus", "ramallah"],
+    "SDN": ["darfur", "hartum", "faşir", "kordofan"], "SSD": ["güney sudan"],
+    "AFG": ["afganistan", "kabil", "herat", "kandahar"], "SYR": ["suriye", "halep", "idlib", "İdlib", "şam", "humus"],
+    "YEM": ["yemen", "sana", "hudeyde", "taiz"], "LBN": ["lübnan", "beyrut"], "COD": ["kongo"],
+    "SOM": ["somali", "mogadişu"], "ETH": ["etiyopya", "tigray"], "MMR": ["myanmar", "arakan"],
+    "BGD": ["bangladeş"], "HTI": ["haiti"], "UKR": ["ukrayna", "kiev", "harkiv", "odessa"],
+    "IRQ": ["irak", "bağdat", "musul", "erbil"], "IRN": ["İran", "iran", "tahran"], "PAK": ["pakistan"],
+    "IND": ["hindistan", "keşmir"], "NER": ["nijer"], "NGA": ["nijerya"], "TCD": ["çad"],
+    "CAF": ["orta afrika"], "LBY": ["libya", "trablus", "bingazi"], "MOZ": ["mozambik"], "CMR": ["kamerun"],
+    "COL": ["kolombiya"], "CHN": ["çin", "doğu türkistan", "uygur"], "ISR": ["İsrail", "israil", "tel aviv"],
+    "EGY": ["mısır", "kahire"], "JOR": ["ürdün"], "RUS": ["rusya", "moskova"], "MDG": ["madagaskar"],
+    "ZMB": ["zambiya"], "MWI": ["malavi"], "ZWE": ["zimbabve"], "RWA": ["ruanda"], "TZA": ["tanzanya"],
+    "BDI": ["burundi"], "BFA": ["burkina faso"], "KEN": ["kenya"], "UGA": ["uganda"], "VEN": ["venezuela"],
+    "AZE": ["azerbaycan"], "ARM": ["ermenistan"], "SAU": ["suudi arabistan"], "BIH": ["bosna"],
+}
+for _iso, _ws in TR_PLACES.items():
+    PLACES.setdefault(_iso, []).extend(_ws)
+
 DEMONYMS = {"PSE": ["palestinian"], "SDN": ["sudanese"], "AFG": ["afghan"], "SYR": ["syrian"],
             "YEM": ["yemeni"], "LBN": ["lebanese"], "SOM": ["somali"], "ETH": ["ethiopian"],
             "MMR": ["rohingya"], "HTI": ["haitian"], "UKR": ["ukrainian"], "IRQ": ["iraqi"],

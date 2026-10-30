@@ -1,0 +1,202 @@
+{
+ "articles": 274838,
+ "article_country_rows": 385743,
+ "domains": 7317,
+ "articles_by_group": {
+  "other": 269290,
+  "turkish": 1584,
+  "western": 3964
+ },
+ "period": "30 days of GDELT 2.0 event files (one every 30 min) up to 2026-10-29",
+ "n_crises": 35,
+ "need_threshold": 0.3,
+ "q1_spearman_need_vs_attention": {
+  "western": {
+   "rho": 0.254,
+   "p": 0.14
+  },
+  "turkish": {
+   "rho": 0.285,
+   "p": 0.097
+  },
+  "all": {
+   "rho": 0.14,
+   "p": 0.423
+  }
+ },
+ "q1_share_of_coverage_on_crises": {
+  "western": 0.188,
+  "turkish": 0.331,
+  "all": 0.226
+ },
+ "q1_top15": [
+  {
+   "iso3": "PSE",
+   "name": "Palestine",
+   "need": 1.0,
+   "west_pct": 3.38,
+   "turkish_pct": 8.52,
+   "all_pct": 0.98
+  },
+  {
+   "iso3": "SDN",
+   "name": "Sudan",
+   "need": 0.81,
+   "west_pct": 0.47,
+   "turkish_pct": 1.3,
+   "all_pct": 0.35
+  },
+  {
+   "iso3": "SOM",
+   "name": "Somalia",
+   "need": 0.66,
+   "west_pct": 0.94,
+   "turkish_pct": 0.51,
+   "all_pct": 0.31
+  },
+  {
+   "iso3": "SSD",
+   "name": "S. Sudan",
+   "need": 0.57,
+   "west_pct": 0.23,
+   "turkish_pct": 0.14,
+   "all_pct": 0.12
+  },
+  {
+   "iso3": "YEM",
+   "name": "Yemen",
+   "need": 0.57,
+   "west_pct": 2.25,
+   "turkish_pct": 7.73,
+   "all_pct": 0.89
+  },
+  {
+   "iso3": "BDI",
+   "name": "Burundi",
+   "need": 0.57,
+   "west_pct": 0.14,
+   "turkish_pct": 0.07,
+   "all_pct": 0.03
+  },
+  {
+   "iso3": "COD",
+   "name": "Dem. Rep. Congo",
+   "need": 0.55,
+   "west_pct": 0.19,
+   "turkish_pct": 0.22,
+   "all_pct": 0.11
+  },
+  {
+   "iso3": "TCD",
+   "name": "Chad",
+   "need": 0.51,
+   "west_pct": 0.14,
+   "turkish_pct": 0.07,
+   "all_pct": 0.1
+  },
+  {
+   "iso3": "HTI",
+   "name": "Haiti",
+   "need": 0.49,
+   "west_pct": 0.23,
+   "turkish_pct": 0.0,
+   "all_pct": 0.15
+  },
+  {
+   "iso3": "MDG",
+   "name": "Madagascar",
+   "need": 0.49,
+   "west_pct": 0.05,
+   "turkish_pct": 0.0,
+   "all_pct": 0.03
+  },
+  {
+   "iso3": "NER",
+   "name": "Niger",
+   "need": 0.46,
+   "west_pct": 0.05,
+   "turkish_pct": 0.22,
+   "all_pct": 0.1
+  },
+  {
+   "iso3": "NGA",
+   "name": "Nigeria",
+   "need": 0.46,
+   "west_pct": 0.85,
+   "turkish_pct": 0.07,
+   "all_pct": 3.76
+  },
+  {
+   "iso3": "CAF",
+   "name": "Central African Rep.",
+   "need": 0.46,
+   "west_pct": 0.28,
+   "turkish_pct": 0.07,
+   "all_pct": 0.04
+  },
+  {
+   "iso3": "SYR",
+   "name": "Syria",
+   "need": 0.45,
+   "west_pct": 0.89,
+   "turkish_pct": 4.26,
+   "all_pct": 0.43
+  },
+  {
+   "iso3": "TLS",
+   "name": "Timor-Leste",
+   "need": 0.43,
+   "west_pct": 0.05,
+   "turkish_pct": 0.14,
+   "all_pct": 0.02
+  }
+ ],
+ "q2_rss_vs_gdelt_western_rho": 0.66,
+ "q2_silence_rank_rho": 0.804,
+ "q2_silence_top10_overlap": 8,
+ "q2_silence_top10_gdelt": [
+  "Sudan",
+  "Burundi",
+  "S. Sudan",
+  "Dem. Rep. Congo",
+  "Somalia",
+  "Chad",
+  "Madagascar",
+  "Niger",
+  "Haiti",
+  "Timor-Leste"
+ ],
+ "q3_n": 35,
+ "q3_spearman_funding_pc_vs_need": 0.593,
+ "q3_spearman_funding_pc_vs_western_attention": 0.351,
+ "q3_partial_rho_attention_funding_given_need": {
+  "rho": 0.282,
+  "p": 0.101
+ },
+ "q3_quiet_vs_visible": {
+  "quiet": {
+   "n": 18,
+   "median_need": 0.37,
+   "median_usd_per_person": 3.9
+  },
+  "visible": {
+   "n": 17,
+   "median_need": 0.46,
+   "median_usd_per_person": 51.6
+  }
+ },
+ "q4_palestine_stories_located_in_israel_only": {
+  "other": {
+   "stories": 1099,
+   "israel_only_pct": 89.7
+  },
+  "turkish": {
+   "stories": 55,
+   "israel_only_pct": 96.4
+  },
+  "western": {
+   "stories": 31,
+   "israel_only_pct": 90.3
+  }
+ }
+}

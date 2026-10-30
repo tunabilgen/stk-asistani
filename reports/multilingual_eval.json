@@ -1,0 +1,62 @@
+{
+ "n": 300,
+ "source": "English HumSet test excerpts, machine-translated with OPUS-MT",
+ "scores": {
+  "Keyword rules": {
+   "en": {
+    "micro_f1": 0.599,
+    "macro_f1": 0.584
+   },
+   "tr": {
+    "micro_f1": 0.151,
+    "macro_f1": 0.147
+   },
+   "ar": {
+    "micro_f1": 0.047,
+    "macro_f1": 0.056
+   }
+  },
+  "TF-IDF + LogReg": {
+   "en": {
+    "micro_f1": 0.792,
+    "macro_f1": 0.783
+   },
+   "tr": {
+    "micro_f1": 0.336,
+    "macro_f1": 0.197
+   },
+   "ar": {
+    "micro_f1": 0.2,
+    "macro_f1": 0.14
+   }
+  },
+  "Multilingual embeddings + LogReg": {
+   "en": {
+    "micro_f1": 0.732,
+    "macro_f1": 0.681
+   },
+   "tr": {
+    "micro_f1": 0.699,
+    "macro_f1": 0.631
+   },
+   "ar": {
+    "micro_f1": 0.704,
+    "macro_f1": 0.643
+   }
+  },
+  "App: language router (TF-IDF for EN/FR/ES, multilingual otherwise)": {
+   "en": {
+    "micro_f1": 0.792,
+    "macro_f1": 0.783
+   },
+   "tr": {
+    "micro_f1": 0.695,
+    "macro_f1": 0.627
+   },
+   "ar": {
+    "micro_f1": 0.704,
+    "macro_f1": 0.643
+   }
+  }
+ }
+}

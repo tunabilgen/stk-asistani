@@ -1,0 +1,127 @@
+[
+ {
+  "model": "1. Keyword rules (baseline)",
+  "micro_f1": 0.5578,
+  "macro_f1": 0.5392,
+  "per_class_f1": {
+   "food": 0.59,
+   "health": 0.678,
+   "wash": 0.674,
+   "shelter": 0.384,
+   "education": 0.77,
+   "protection": 0.498,
+   "nutrition": 0.748,
+   "livelihoods": 0.492,
+   "agriculture": 0.417,
+   "logistics": 0.141
+  },
+  "by_language_macro_f1": {
+   "en": 0.5821,
+   "es": 0.4544,
+   "fr": 0.4347
+  },
+  "n_test": 12384,
+  "train_seconds": 0,
+  "notes": "hand-written EN/FR/ES keyword patterns, no learning"
+ },
+ {
+  "model": "2. TF-IDF + Complement Naive Bayes",
+  "micro_f1": 0.6775,
+  "macro_f1": 0.6308,
+  "per_class_f1": {
+   "food": 0.641,
+   "health": 0.789,
+   "wash": 0.721,
+   "shelter": 0.661,
+   "education": 0.708,
+   "protection": 0.691,
+   "nutrition": 0.69,
+   "livelihoods": 0.493,
+   "agriculture": 0.52,
+   "logistics": 0.394
+  },
+  "by_language_macro_f1": {
+   "en": 0.6164,
+   "es": 0.4404,
+   "fr": 0.596
+  },
+  "n_test": 12384,
+  "train_seconds": 19.0,
+  "notes": ""
+ },
+ {
+  "model": "3. TF-IDF + linear SVM",
+  "micro_f1": 0.7812,
+  "macro_f1": 0.7449,
+  "per_class_f1": {
+   "food": 0.802,
+   "health": 0.845,
+   "wash": 0.832,
+   "shelter": 0.76,
+   "education": 0.837,
+   "protection": 0.757,
+   "nutrition": 0.815,
+   "livelihoods": 0.673,
+   "agriculture": 0.607,
+   "logistics": 0.522
+  },
+  "by_language_macro_f1": {
+   "en": 0.7544,
+   "es": 0.6286,
+   "fr": 0.7174
+  },
+  "n_test": 12384,
+  "train_seconds": 46.7,
+  "notes": ""
+ },
+ {
+  "model": "4. TF-IDF + logistic regression (prototype)",
+  "micro_f1": 0.7797,
+  "macro_f1": 0.7404,
+  "per_class_f1": {
+   "food": 0.795,
+   "health": 0.844,
+   "wash": 0.824,
+   "shelter": 0.757,
+   "education": 0.834,
+   "protection": 0.761,
+   "nutrition": 0.796,
+   "livelihoods": 0.67,
+   "agriculture": 0.599,
+   "logistics": 0.523
+  },
+  "by_language_macro_f1": {
+   "en": 0.748,
+   "es": 0.6176,
+   "fr": 0.7157
+  },
+  "n_test": 12384,
+  "train_seconds": 43.6,
+  "notes": "used in the app: interpretable, retrains in minutes, self-training loop"
+ },
+ {
+  "model": "5. Multilingual MiniLM embeddings (frozen) + LogReg",
+  "micro_f1": 0.7365,
+  "macro_f1": 0.6959,
+  "per_class_f1": {
+   "food": 0.758,
+   "health": 0.812,
+   "wash": 0.771,
+   "shelter": 0.655,
+   "education": 0.822,
+   "protection": 0.727,
+   "nutrition": 0.75,
+   "livelihoods": 0.637,
+   "agriculture": 0.586,
+   "logistics": 0.442
+  },
+  "by_language_macro_f1": {
+   "en": 0.6855,
+   "es": 0.6181,
+   "fr": 0.685
+  },
+  "n_test": 12384,
+  "train_seconds": 2531.1,
+  "notes": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, 384-d sentence vectors, max 128 tokens"
+ }
+]

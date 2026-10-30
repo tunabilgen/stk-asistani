@@ -4,7 +4,7 @@ const I18N = {
     tagline: "Bağımsız kaynaklarla kriz izleme ve kampanya önerisi",
     lensPriority: "Öncelik", lensSilence: "Sessizlik", lensTrend: "Kötüleşme",
     lensPriorityNote: "İhtiyaç, aciliyet, faaliyet alanlarınız ve ihtiyaç sahibi kişi başına düşen yardımın azlığına göre sıralanır.",
-    lensSilenceNote: "Ana akım Batı medyasının haber yapmadığı ihtiyaç: ihtiyaç × (1 − Batı medyasında görünürlük).",
+    lensSilenceNote: "Ana akım Batı medyasının haber yapmadığı ihtiyaç: ihtiyaç × (1 − Batı medyasında görünürlük). Görünürlük: GDELT, son 30 gün, binlerce haber.",
     lensTrendNote: "Son 3 ayda şiddeti önceki 12 aya göre artan krizler — erken müdahale fırsatı.",
     settings: "Ayarlar", tabRank: "Sıralama", tabNews: "Bağımsız haberler",
     layerEvents: "Afetler", layerIgnored: "Görmezden gelinen", layerGlobe: "Küre",
@@ -54,7 +54,7 @@ const I18N = {
     fixLabel: "etiketi düzelt", save: "Kaydet", thanks: "Teşekkürler — model bir sonraki eğitimde bunu öğrenecek.",
     western: "Batı medyası", noData: "Veri yok",
     ovTitle: "Bugünün tablosu", ovLead: "Haritadan ya da listeden bir ülke seçerek dosyasını açın.",
-    ovWorse: "Kötüleşen", ovIgnored: "Batı medyasının görmediği", ovTop: "En yüksek öncelik",
+    ovWorse: "Kötüleşen", ovIgnored: "Batı medyasının görmediği", ovTop: "En yüksek öncelik", ovTopSilence: "En çok görmezden gelinen", ovTopTrend: "En hızlı kötüleşen",
     ovSources: "Kaynaklar: UCDP (Uppsala Üniv.), Küresel Açlık Endeksi, IFRC, Gazze Sağlık Bakanlığı (Tech for Palestine), USGS, NASA ve 15 bağımsız haber kaynağı. BM verisi kullanılmaz.",
     sProfile: "STK profili", sName: "STK adı", sHome: "Merkez ülke", sSectors: "Faaliyet alanları",
     sTeams: "Sahada ekibi olan ülkeler", sExcl: "Faaliyet dışı ülkeler", sExclHelp: "Bu ülkeler skor almaz ve gri görünür.",
@@ -75,7 +75,7 @@ const I18N = {
     tagline: "Crisis monitoring and campaign recommendations from independent sources",
     lensPriority: "Priority", lensSilence: "Silence", lensTrend: "Worsening",
     lensPriorityNote: "Ranked by need, urgency, your sectors and how little aid reaches each person in need.",
-    lensSilenceNote: "Need left unreported by Western mainstream media: need × (1 − Western visibility).",
+    lensSilenceNote: "Need left unreported by Western mainstream media: need × (1 − Western visibility). Visibility: GDELT, last 30 days, thousands of articles.",
     lensTrendNote: "Crises whose violence rose in the last 3 months vs the previous 12 — a chance to act early.",
     settings: "Settings", tabRank: "Ranking", tabNews: "Independent news",
     layerEvents: "Disasters", layerIgnored: "Ignored", layerGlobe: "Globe",
@@ -125,7 +125,7 @@ const I18N = {
     fixLabel: "fix label", save: "Save", thanks: "Thanks — the model will learn this at the next training run.",
     western: "Western media", noData: "No data",
     ovTitle: "Today's picture", ovLead: "Pick a country on the map or in the list to open its file.",
-    ovWorse: "Worsening", ovIgnored: "Ignored by Western media", ovTop: "Highest priority",
+    ovWorse: "Worsening", ovIgnored: "Ignored by Western media", ovTop: "Highest priority", ovTopSilence: "Most overlooked", ovTopTrend: "Fastest worsening",
     ovSources: "Sources: UCDP (Uppsala Univ.), Global Hunger Index, IFRC, Gaza Ministry of Health (Tech for Palestine), USGS, NASA and 15 independent news outlets. No UN data.",
     sProfile: "NGO profile", sName: "NGO name", sHome: "Home country", sSectors: "Areas of work",
     sTeams: "Countries with field teams", sExcl: "Excluded countries", sExclHelp: "These countries get no score and are shown grey.",
@@ -150,7 +150,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 const S = {
-  lang: store.get("lang2", "en"), theme: store.get("theme", "light"), lens: store.get("lens2", "priority"),
+  lang: store.get("lang2", "en"), theme: store.get("theme", "light"), lens: store.get("lens3", "silence"),
   sideTab: "rank", tab: "summary", data: null, byIso: {}, selected: null, scores: {}, rankPos: {},
   map: null, globe: false, llm: null,
   sectors: new Set(store.get("sectors2", ["food", "health", "shelter"])),
@@ -395,7 +395,7 @@ function renderOverview() {
   ov.innerHTML = `<div class="ov">
     <div><h1>${t("ovTitle")}</h1><p class="lead">${t("ovLead")}</p></div>
     <div class="stats">${stat(worse.length, t("ovWorse"))}${stat(ign.length, t("ovIgnored"))}${stat(S.data.news.length, t("tabNews"))}</div>
-    <div class="sec"><h3>${t("ovTop")}</h3><ul class="list ov-list">${top.map(([iso, sc]) => li(S.byIso[iso], sc.s)).join("")}</ul></div>
+    <div class="sec"><h3>${t({ silence: "ovTopSilence", trend: "ovTopTrend" }[S.lens] || "ovTop")}</h3><ul class="list ov-list">${top.map(([iso, sc]) => li(S.byIso[iso], sc.s)).join("")}</ul></div>
     ${worse.length ? `<div class="sec"><h3>${t("ovWorse")}</h3><ul class="list ov-list">${worse.map((c) =>
       li(c, `×${c.trend.ratio}`)).join("")}</ul></div>` : ""}
     <p class="note">${t("ovSources")}</p></div>`;
@@ -798,7 +798,7 @@ async function boot() {
   S.data.countries.forEach((c) => (S.byIso[c.iso3] = c));
   try { S.llm = (await (await fetch("api/status")).json()).llm; } catch {}
   $$("[data-lens]").forEach((b) => (b.onclick = () => {
-    S.lens = b.dataset.lens; store.set("lens2", S.lens);
+    S.lens = b.dataset.lens; store.set("lens3", S.lens);
     $$("[data-lens]").forEach((x) => x.classList.toggle("on", x === b)); refreshAll();
   }));
   $$("[data-lens]").forEach((x) => x.classList.toggle("on", x.dataset.lens === S.lens));

@@ -109,7 +109,16 @@ def build():
         # a village massacre in Sudan is not
         (df["acute_conflict_news"] * df["vulnerability"]).clip(upper=0.5)], axis=1).max(axis=1)
     n["neglect"] = (1 - df["ifrc_funded_pct"] / 100).clip(0, 1)
-    n["att_western"] = features._logrange(df["news_western"] + 1, 1, 60)
+    # Western attention: GDELT (thousands of articles, 30 days) when available, else the RSS sample
+    gd = features.gdelt_attention()
+    if not gd.empty:
+        df["gdelt_western"] = gd.get("western", pd.Series(dtype=float)).reindex(df.index).fillna(0)
+        df["gdelt_turkish"] = gd.get("turkish", pd.Series(dtype=float)).reindex(df.index).fillna(0)
+        df["gdelt_all"] = gd.sum(axis=1).reindex(df.index).fillna(0)
+        n["att_western"] = features._logrange(df["gdelt_western"] + 1, 1, 300)
+        n.loc[n.index.isin(["USA", "GBR"]), "att_western"] = 1.0  # home countries of these outlets
+    else:
+        n["att_western"] = features._logrange(df["news_western"] + 1, 1, 60)
     n["att_indep"] = features._logrange(df["news_independent"] + 1, 1, 120)
 
     gaps = json.loads((DATA / "known_gaps.json").read_text(encoding="utf-8"))
@@ -164,11 +173,22 @@ def build():
                   f"{int(gz['famine_deaths'])} starvation deaths and {int(gz.get('aid_seekers_killed') or 0)} people "
                   "killed while seeking aid are recorded. The aid gap is scored as high accordingly."}
 
-    # "ignored crisis": high need, but in the bottom 40% of Western media attention among
-    # comparable crises, and (if known) under-funded
-    pool = n[n["prot"].fillna(0) >= 0.5]
-    cut = pool["att_western"].quantile(0.40)
-    ignored = set(pool[(pool["att_western"] <= cut) & ~(pool["neglect"] < 0.5)].index)
+    # ---- silence: Western coverage RELATIVE TO NEED ----
+    # A crisis is judged by the coverage its need would warrant, not by absolute visibility:
+    # fair share = the country's share of total need across all countries. coverage ratio =
+    # actual share of Western foreign-news articles / fair share (1 = covered in proportion to
+    # need, 0.1 = a tenth of what the need warrants, 6 = six times). Silence = need x (1 - ratio),
+    # ratio capped at 1, so a large crisis covered at a third of its share counts as more silent
+    # than a small one covered at half of its share.
+    need_now = pd.concat([n["prot"].astype(float), n["conflict_recent"]], axis=1).max(axis=1).fillna(0)
+    cov = (df["gdelt_western"] if "gdelt_western" in df else df["news_western"]).astype(float)
+    cov = cov.where(~cov.index.isin(["USA", "GBR"]))  # domestic news of these outlets is not attention
+    df["att_share_western"] = cov / cov.sum()
+    df["need_share"] = need_now / need_now.sum()
+    df["coverage_ratio"] = (df["att_share_western"] / df["need_share"]).where(df["need_share"] > 0)
+    n["silence"] = need_now * (1 - df["coverage_ratio"].clip(upper=1).fillna(1))
+    # "ignored crisis": serious need, covered at less than a third of its fair share
+    ignored = set(n[(n["prot"].fillna(0) >= 0.4) & (df["coverage_ratio"] < 1 / 3)].index)
 
     sector_news = {}
     for _, r in news.explode("iso3s").dropna(subset=["iso3s"]).iterrows():
@@ -224,9 +244,9 @@ def build():
                       "ghi_2018": _num(r.get("ghi_2018")), "ghi_2026": _num(r.get("ghi_2026"))},
             "conflict_history": r["ucdp_history"] if isinstance(r.get("ucdp_history"), dict) else {},
             "ifrc_appeals": r["ifrc_appeals"] if isinstance(r.get("ifrc_appeals"), list) else [],
-            # silence index: how much need exists that Western mainstream media do not report
-            "silence": _num(None if prot is None else max(prot, nr["conflict_recent"] if pd.notna(nr["conflict_recent"]) else 0)
-                            * (1 - (0 if pd.isna(nr["att_western"]) else nr["att_western"]))),
+            # silence index: need x (1 - Western coverage relative to the need's fair share)
+            "silence": _num(None if prot is None else nr["silence"]),
+            "coverage_ratio": _num(r.get("coverage_ratio")),
             "score": {"protracted": _num(prot), "acute": _num(nr["acute"]) or 0,
                       "acute_disaster": _num(r["acute_disaster"]) or 0,
                       "acute_conflict": _num(nr["conflict_recent"]) or 0,
@@ -293,6 +313,9 @@ FINAL_COLS = {
     "need_people": "people in severe need (estimate) = population x protracted suffering above 0.3",
     "aid_per_person": "humanitarian aid per person in severe need (USD/year), recognised crises only",
     "news_independent": "news items, last 30 days, 15 independent outlets", "news_western": "news items, last 30 days, BBC/Guardian/NYT",
+    "gdelt_western": "GDELT, 30 days: articles by 24 Western mainstream outlets about this country (USA/UK stories excluded)",
+    "gdelt_turkish": "GDELT, 30 days: articles by Turkish outlets about this country (Türkiye stories excluded)",
+    "gdelt_all": "GDELT, 30 days: articles by all outlets (excl. domestic stories of Western/Turkish outlets)",
     "recent_monthly": "mean conflict deaths per month, last 3 months", "base_monthly": "median conflict deaths per month, 12 months before",
     "trend_ratio": "(recent+5)/(base+5)", "heavy_months_12": "months with heavy violence in the last 12", "status": "trajectory label",
     "vulnerability": "0-1, max(hunger level, ongoing violence)",
@@ -303,7 +326,11 @@ FINAL_COLS = {
     "n_neglect": "1 - IFRC funded share", "n_att_western": "Western media attention 0-1", "n_att_indep": "independent media attention 0-1",
     "n_prot": "protracted suffering 0-1", "escalation": "worsening bonus 0-1",
     # outputs
-    "ignored_by_western_media": "flag", "silence": "silence index 0-1",
+    "att_share_western": "share of Western outlets' foreign-news articles about this country",
+    "need_share": "this country's share of total need (max of protracted and recent-violence components)",
+    "coverage_ratio": "att_share_western / need_share: 1 = covered in proportion to need, <1 = under-covered",
+    "ignored_by_western_media": "flag: protracted need >= 0.4 and coverage_ratio < 1/3",
+    "silence": "silence index 0-1 = need x (1 - min(coverage_ratio, 1))",
 }
 
 
