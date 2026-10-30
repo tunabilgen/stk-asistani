@@ -19,6 +19,7 @@ const I18N = {
     makeCampaign: "Kampanya önerisi oluştur", close: "Kapat",
     tSummary: "Özet", tProjects: "Proje fikirleri", tData: "Veriler",
     projLoading: "İller analiz ediliyor (şiddet, iklim, rakım)… ilk açılış birkaç saniye sürebilir.",
+    projNone: "Bu ülke için il verisi yok. Ham verileri indirmek için: python -m src.ingest",
     projIntro: "İller ihtiyaca göre sıralandı. Her il için güvenlik düzeyi, son yılın iklimi ve ona uygun sürdürülebilir proje türleri. Bir projeye tıklayın, sahadan bilginizi ekleyin, taslak oluşturun.",
     secLow: "Düşük risk", secMed: "Orta risk", secHigh: "Yüksek risk — acil yardım / ortak", deaths12: "12 ayda ölüm", newsShort: "haber",
     womenFocus: "kadın odaklı", moreIdeas: "diğer uygun proje (seçili alanlarınız dışında)", cropDisclaimer: "Ürün önerileri genel iklim eşiklerine dayanır; yerel ziraat uzmanı, su hakları ve pazar araştırmasıyla doğrulanmalıdır. İklim: Open-Meteo (ERA5), şiddet: UCDP.",
@@ -91,6 +92,7 @@ const I18N = {
     makeCampaign: "Generate campaign recommendation", close: "Close",
     tSummary: "Summary", tProjects: "Project ideas", tData: "Data",
     projLoading: "Analysing provinces (violence, climate, elevation)… the first time can take a few seconds.",
+    projNone: "No province data for this country yet. To download the raw data run: python -m src.ingest",
     projIntro: "Provinces ranked by need. For each: security level, last year's climate and sustainable project types that fit. Click a project, add what you know from the field and draft it.",
     secLow: "Low risk", secMed: "Medium risk", secHigh: "High risk — emergency / partner", deaths12: "deaths in 12 months", newsShort: "news",
     womenFocus: "women-focused", moreIdeas: "other feasible projects (outside your selected sectors)", cropDisclaimer: "Crop suggestions come from general climate envelopes; confirm with a local agronomist, water rights and market research. Climate: Open-Meteo (ERA5); violence: UCDP.",
@@ -486,6 +488,7 @@ async function loadProjects(c) {
   const data = S.regions[key];
   if (S.selected !== c.iso3 || S.tab !== "projects" || !$("#projBox")) return;
   showProvinces(data);
+  if (!data.provinces.length) { $("#projBox").innerHTML = `<p class="note">${t("projNone")}</p>`; return; }
   const provs = data.provinces.filter((p) => p.ideas.length);
   const secLbl = { low: t("secLow"), medium: t("secMed"), high: t("secHigh") };
   $("#projBox").innerHTML = `<p class="note" style="margin-top:0">${t("projIntro")}</p>

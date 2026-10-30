@@ -14,10 +14,12 @@ results are shown on an interactive world map.
 
 ## Source independence
 
-The project deliberately uses **no UN data**. Evidence comes from academic datasets, NGO indices,
+The **ranking uses no UN data**. Evidence comes from academic datasets, NGO indices,
 the Red Cross / Red Crescent movement, open Gaza casualty data, science agencies and independent /
-Global-South media. Western mainstream media (BBC, Guardian, NYT) are collected **only to measure
-which crises they ignore**.
+Global-South media. Western mainstream media are collected **only to measure which crises they ignore**
+(3 RSS feeds plus 24 outlets in GDELT). Since Assignment 2, UN data appears in one place only: **OCHA FTS funding
+is used as an external benchmark** ("does UN money reach the crises the media ignore?") and never enters the score.
+ReliefWeb (also run by UN OCHA) is not used, for the same reason.
 
 | Source | Publisher (type) | Used for |
 |---|---|---|
@@ -28,7 +30,11 @@ which crises they ignore**.
 | [OECD DAC2A](https://data-explorer.oecd.org) | OECD (donor-reported statistics) | humanitarian aid per recipient → aid per person in need |
 | [USGS](https://earthquake.usgs.gov), [NASA EONET](https://eonet.gsfc.nasa.gov) | science agencies | earthquakes, storms, floods, volcanoes |
 | News RSS | Al Jazeera, Middle East Eye, Anadolu, Yeni Şafak, Daily Sabah, The New Arab, MEMO, Mondoweiss, Radio Dabanga, Ariana News, Amu TV, Dawn, Africanews, MSF, Amnesty | classifier input, real-time violence signal, self-training |
-| News RSS (comparison only) | BBC, The Guardian, New York Times | Western-attention gap |
+| News RSS, Turkish media | TRT Haber, AA Türkçe, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet | Turkish vs Western comparison, classifier input (Turkish → multilingual model) |
+| News RSS (comparison only) | BBC, The Guardian, New York Times | Western-attention gap (live feed) |
+| [GDELT 2.0](https://www.gdeltproject.org) | GDELT Project (open event data) | **Western attention** since Assignment 2: 30 days, 274,838 articles, 7,317 outlets; 24 Western mainstream and 28 Turkish domains listed in `src/sources/gdelt.py` |
+| [OCHA FTS](https://fts.unocha.org) | UN OCHA | **benchmark only**, never in the ranking: funding per person vs media attention |
+| [Open-Meteo](https://open-meteo.com) (ECMWF ERA5, Copernicus DEM) | open weather API | province climate and elevation for project ideas |
 | [HumSet](https://huggingface.co/datasets/nlp-thedeep/humset) | DEEP / Data Friendly Space (Apache-2.0) | **training text only** for the classifiers |
 | [Natural Earth](https://www.naturalearthdata.com) | public domain | map shapes |
 
@@ -56,7 +62,7 @@ Regenerate everything: `python -m src.ingest && python -m src.build_dashboard &&
 | 4. Prioritise | Protracted suffering = half the worst civilian dimension (civilians killed per 100k or hunger) plus half the weighted mean of civilian harm (2), conflict intensity (1) and hunger (1.5). Acute = max(natural-hazard alert × vulnerability, where vulnerability = the higher of the hunger level (GHI does not score high-income countries, which have no hunger problem) and ongoing violence; an earthquake in a state that copes on its own, such as the USA, scores zero; a new IFRC appeal; recent violence from UCDP / Gaza MoH / news). Plus sector need, IFRC funding gap and an *ignored-by-Western-media* bonus. The user sets every weight |
 | 4a. Aid gap | Humanitarian aid (OECD) **per person in severe need**, recognised crises only; Türkiye's refugee-hosting costs excluded from aid to Syria; documented starvation deaths override budgets (aid not delivered) |
 | 4a. Trajectory | Last 3 months vs median of the 12 before and vs the previous quarter → **worsening / chronic / improving** (a drop while killing continues is never labelled as improvement); escalation is an additive bonus (never a penalty) and has its own lens |
-| 4b. Silence lens | **Silence index** = need × (1 − Western-media visibility). One click re-ranks the map by the crises mainstream media leave unreported |
+| 4b. Silence lens | **Need-relative silence** = need × (1 − min(coverage ratio, 1)), where coverage ratio = the country's share of Western foreign news ÷ its share of total need (GDELT, details below). One click re-ranks the map by the crises mainstream media leave unreported |
 | 4c. Place-specific projects | Per **province** (Natural Earth admin-1): violence (UCDP events → nearest province), last year's climate and elevation (Open-Meteo ERA5), news naming the province. A crop–climate table (21 crops) and a catalogue of 16 sustainable project types (farmers' cooperative with seed bank, orchard, greenhouse, women's tailoring workshop, food processing, small livestock pass-on, beekeeping, solar well, vocational training, mobile clinic, …) are matched to each province by security, climate, sector and budget. The LLM drafts a full proposal (activities, procurement, training, sustainability and exit, timeline, budget split, KPIs, risks, what to verify on site), using an optional field note from the NGO |
 | 5. Decide modality | Distance from home country and field-team countries → **direct** vs **partnership** (with an access-check note) |
 | 6. Find partners | The country's **Red Crescent / Red Cross society** (verified, IFRC directory) + organisations named in independent news (unverified) + due-diligence checklist |
@@ -100,7 +106,7 @@ and **0%** to Sudan, DR Congo, Somalia, Syria and Lebanon. See [reports/eda_summ
 |---|---|
 | Put the *silence* idea at the centre, simplify the rest | The app now opens on the **Silence** view. Silence is now **relative to need** (below). The yes/no "ignored" flag became a ratio: *"West: 10% of due coverage"*. |
 | Use GDELT | Western attention now comes from **GDELT 2.0**: 30 days, 274,838 articles, 7,317 outlets (was ~90 RSS items from 3 outlets). |
-| Use ReliefWeb and OCHA FTS | ReliefWeb was already a source. **OCHA FTS funding is used only as a benchmark** ("does UN money reach the crises the media ignore?"), never in the ranking, so the ranking stays independent of the UN system. |
+| Use ReliefWeb and OCHA FTS | **OCHA FTS** added as a **benchmark only** ("does UN money reach the crises the media ignore?"), never in the ranking, so the ranking stays independent of the UN system. **ReliefWeb is not used**: it is also run by UN OCHA, and its reports would bring UN framing into the ranking. We may add it as a second benchmark in Assignment 3. |
 | Add Turkish media and compare it with Western media | 8 Turkish outlets from across the political spectrum (TRT Haber, AA, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet) as RSS, plus 1,584 Turkish articles in GDELT. Comparison below. |
 | Test the classifier on Turkish and Arabic | New EN/TR/AR test set and a **language router** in the app (below). |
 | Interview 2–3 NGOs | We could not arrange interviews in this period. In Assignment 3 we replace them with structured **persona tests** (small Turkish NGO, international NGO, journalist, donor) and say clearly that this is a weaker form of user validation. |
@@ -211,7 +217,7 @@ with the same SYSTEM prompt and FACTS after the free quota ran out. Without any 
 
 ```bash
 pip install -r requirements.txt
-copy .env.example .env            # choose an LLM option (optional, see above)
+copy .env.example .env            # Windows; macOS/Linux: cp .env.example .env — choose an LLM option (optional, see above)
 python -m src.download_humset      # training data (HumSet, ~125 MB)
 python -m src.ingest              # downloads all sources (~3 min)
 python -m src.sector_model train  # ~5 min
@@ -262,5 +268,6 @@ src/build_dashboard.py → web/data/dashboard.json
 src/eda.py             figures + reports/eda_summary.md
 web/                   MapLibre GL map UI
 data/llm_drafts/       saved, labelled LLM campaign drafts (shown when the LLM is unreachable)
+data/regions/          saved province profiles (top 32 countries) so Project ideas works in a fresh clone
 docs/                  concept note, Assignment 1 slides, Assignment 2 video script
 ```

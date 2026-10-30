@@ -32,7 +32,7 @@
 <div class="box">
 <b>GitHub repository (code, data, README):</b> <a href="https://github.com/tunabilgen/stk-asistani">https://github.com/tunabilgen/stk-asistani</a><br>
 <b>Screen recording (2:38):</b> <a href="https://drive.google.com/file/d/1lPLXOffwEZDrbJRBoWqMd4cP7gibOF5S/view?usp=sharing">https://drive.google.com/file/d/1lPLXOffwEZDrbJRBoWqMd4cP7gibOF5S/view?usp=sharing</a><br>
-<b>Run it:</b> <code>pip install -r requirements.txt</code> → <code>python app.py</code> → http://localhost:8000 (full steps in the README).
+<b>Run it:</b> follow the README section “Run it” (install, download data, train models, build, <code>python app.py</code>). A fresh clone already shows the map, campaign drafts and saved province profiles for the top-ranked countries.
 </div>
 
 <h2>1) What the prototype does, end to end</h2>
@@ -134,7 +134,7 @@ prompt and facts. Each one is labelled as such in the app and in the README.</p>
 <tr><th style="width:34%">Feedback</th><th>What we did</th></tr>
 <tr><td>Put the silence idea at the centre; simplify the rest</td><td>The app opens on the Silence view; silence is now relative to need; the yes/no flag became a coverage ratio.</td></tr>
 <tr><td>Use GDELT</td><td>Western attention now comes from GDELT 2.0 (274,838 articles, 7,317 outlets, 30 days).</td></tr>
-<tr><td>Use ReliefWeb and OCHA FTS</td><td>ReliefWeb was already a source. OCHA FTS is used only as a benchmark (“does UN money reach the crises the media ignore?”).</td></tr>
+<tr><td>Use ReliefWeb and OCHA FTS</td><td>OCHA FTS added as a benchmark only (“does UN money reach the crises the media ignore?”), never in the ranking. ReliefWeb is not used: it is also run by UN OCHA, and the ranking deliberately stays independent of UN data; it may be added as a second benchmark in Assignment 3.</td></tr>
 <tr><td>Add Turkish media; compare with Western media</td><td>8 Turkish outlets across the political spectrum (TRT Haber, AA, Hürriyet, Yeni Şafak, Sabah, Cumhuriyet, BirGün, bianet) plus Turkish GDELT outlets; comparison in section 5.</td></tr>
 <tr><td>Test the classifier on Turkish and Arabic</td><td>New EN/TR/AR test set; language router in the app (section 3).</td></tr>
 <tr><td>Interview 2–3 NGOs</td><td>We could not arrange interviews in this period. In Assignment 3 we replace them with structured persona tests (small Turkish NGO, international NGO, journalist, donor) and state clearly that this is a weaker form of user validation.</td></tr>

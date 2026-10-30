@@ -18,11 +18,12 @@ import pandas as pd
 import requests
 
 from src import features
-from src.config import LIVE, PROCESSED, RAW, USER_AGENT
+from src.config import LIVE, PROCESSED, RAW, ROOT, USER_AGENT
 
 ADMIN1 = RAW / "indep" / "ne_admin1.geojson"
 CACHE = PROCESSED / "regions"
 CACHE.mkdir(parents=True, exist_ok=True)
+SNAPSHOT = ROOT / "data" / "regions"  # committed profiles, so a fresh clone works without the 46 MB admin-1 file
 NE0 = ("https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/"
        "ne_110m_admin_0_countries.geojson")
 H = {"User-Agent": USER_AGENT}
@@ -172,10 +173,18 @@ def profile(iso3: str, refresh: bool = False) -> dict:
         age = time.time() - cache.stat().st_mtime
         if age < 7 * 86400:
             return json.loads(cache.read_text(encoding="utf-8"))
-    provs = admin1(iso3)
-    vio = violence(iso3, provs)
-    clim = climate(provs)
-    nws = news_mentions(provs)
+    try:
+        provs = admin1(iso3)
+        vio = violence(iso3, provs)
+        clim = climate(provs)
+        nws = news_mentions(provs)
+    except Exception as e:  # raw data missing (fresh clone) or a source offline: use the newest saved profile
+        for f in (cache, SNAPSHOT / f"{iso3}.json"):
+            if f.exists():
+                return json.loads(f.read_text(encoding="utf-8"))
+        return {"iso3": iso3, "generated_at": None, "provinces": [],
+                "geometry": {"type": "FeatureCollection", "features": []},
+                "note": f"Province data not available ({type(e).__name__}); run `python -m src.ingest` first."}
     out = []
     for p in provs:
         v = vio.get(p["id"])
@@ -190,3 +199,24 @@ def profile(iso3: str, refresh: bool = False) -> dict:
                for p in provs]}}
     cache.write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
     return res
+
+
+def snapshot(isos: list[str]):
+    """Save profiles to data/regions/ (committed) so the Project ideas tab works in a fresh clone."""
+    SNAPSHOT.mkdir(parents=True, exist_ok=True)
+    for iso in isos:
+        try:
+            res = profile(iso)
+        except Exception as e:
+            print(iso, "failed", e); continue
+        if res["provinces"]:
+            (SNAPSHOT / f"{iso}.json").write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
+            print(iso, len(res["provinces"]), "provinces", flush=True)
+
+
+if __name__ == "__main__":
+    import sys
+    if sys.argv[1:2] == ["snapshot"]:
+        d = json.loads((ROOT / "web" / "data" / "dashboard.json").read_text(encoding="utf-8"))
+        top = [c["iso3"] for c in sorted(d["countries"], key=lambda c: -((c["score"].get("protracted") or 0) + (c.get("silence") or 0)))[:int(sys.argv[2]) if len(sys.argv) > 2 else 30]]
+        snapshot(sorted(set(top) | {p.stem for p in CACHE.glob("*.json")}))
