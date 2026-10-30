@@ -198,7 +198,10 @@ official OpenCode command-line tool (`opencode run`), so the repository contains
 2. Put `LLM_ENGINE=opencode` in `.env`. The free model needed no login in our tests; for paid models run `opencode auth login`.
 
 Alternatives in [.env.example](.env.example): OpenCode Go or OpenRouter (key in your local `.env`, which git ignores).
-Without any LLM the app falls back to a template.
+If the LLM is unreachable (e.g. the free daily quota is used up), the app shows the last saved draft for that country
+from [data/llm_drafts/](data/llm_drafts/), labelled with the model that wrote it and re-checked by the validator. Sudan (TR)
+was written by DeepSeek V4.1 Flash; Sudan (EN), South Sudan, DR Congo, Somalia and Palestine (TR) were written by Claude Opus 5.5
+with the same SYSTEM prompt and FACTS after the free quota ran out. Without any draft the app falls back to a template.
 
 ## Run it
 

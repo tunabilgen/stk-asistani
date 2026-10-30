@@ -1,0 +1,70 @@
+{
+ "iso3": "SSD",
+ "lang": "tr",
+ "engine": "claude-opus-5-5 (Claude Code)",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "note": "Written by Claude Opus 5.5 in a Claude Code session with the app's SYSTEM prompt and FACTS (src/campaign.py), because the free DeepSeek quota was used up.",
+ "campaign": {
+  "title": "Güney Sudan: Sessiz Kalan Açlık Krizine Yerel Ortakla Gıda ve Sağlık Desteği",
+  "summary": "Güney Sudan'da açlık çok ağır, ama Batı medyasında son 30 günde tek haber yok. Global Hunger Index 2026 puanı 42,45 (Concern/Welthungerhilfe; geçici kategori ortası, 35 üstü endişe verici). UCDP verisine göre çatışma ölümleri artıyor: aylık 36'dan 63'e çıktı. IFRC sel çağrısı %65,2 fonlu. Test STK'nın gıda güvenliği ihtiyaç skoru 0,7573, sağlık 0,3008. Öneri: South Sudan Red Cross ile, durum tespitinden sonra, gıda güvenliği ağırlıklı bir ortaklık kampanyası.",
+  "why_now": [
+   "GHI 2026 puanı 42,45 (geçici değer): açlık 'endişe verici' eşiğinin üstünde.",
+   "UCDP: son 90 günde 175 çatışma ölümü; aylık ortalama 36'dan 63'e yükseldi, eğilim kötüleşiyor.",
+   "Son 30 günde 3 bağımsız haber, 0 Batılı haber: kriz görünmüyor, bağışçı ilgisi düşük kalabilir.",
+   "IFRC 'South Sudan - Floods' çağrısı hâlâ tam fonlanmadı (%65,2 toplam)."
+  ],
+  "where": "Güney Sudan (ülke düzeyi). Kesin saha bilgisi verilerde yok; Lakes eyaletindeki toplumlar arası çatışma haberi güvenlik riski olarak dikkate alınmalı, hedef bölge ortakla birlikte belirlenmeli.",
+  "mode": "partnership",
+  "target_groups": [
+   "Gıda güvencesizliği yaşayan haneler",
+   "Sel ve çatışmadan etkilenen topluluklar",
+   "Temel sağlık hizmetine erişimi zayıf aileler"
+  ],
+  "activities": [
+   {
+    "name": "Ortak ile ihtiyaç değerlendirmesi",
+    "description": "South Sudan Red Cross ile hedef bölge, piyasa durumu ve erişim güvenliği birlikte belirlenir."
+   },
+   {
+    "name": "Gıda veya nakit desteği",
+    "description": "Piyasalar çalışıyorsa nakit, çalışmıyorsa ayni gıda; seçim kriterleri toplulukla paylaşılır."
+   },
+   {
+    "name": "Temel sağlık yönlendirmesi",
+    "description": "Mevcut sağlık birimlerine sevk ve bilgilendirme; yeni yapı kurmak yerine var olanı destekleme."
+   },
+   {
+    "name": "Geri bildirim ve şikâyet hattı",
+    "description": "Core Humanitarian Standard'a uygun, yerel dilde şikâyet ve öneri kanalı."
+   }
+  ],
+  "partners": [
+   {
+    "name": "South Sudan Red Cross",
+    "reason": "IFRC ulusal dernekler dizininde doğrulanmış; sel çağrısını yürütüyor. Ortaklık öncesi durum tespiti zorunlu."
+   }
+  ],
+  "donor_message": "Güney Sudan'da açlık endişe verici düzeyde (GHI 2026: 42,45) ve çatışma ölümleri artıyor. Buna rağmen Batı medyasında son 30 günde hiç haber yok. Yerel Kızılhaç ile birlikte, ihtiyacı doğrulanmış hanelere gıda ve temel sağlık desteği ulaştırmak için desteğinizi bekliyoruz.",
+  "social_posts": [
+   "Güney Sudan'da açlık endişe verici düzeyde: GHI 2026 puanı 42,45. Son 30 günde Batı medyasında haber sayısı: 0. #GüneySudan #SessizKriz",
+   "UCDP verisine göre Güney Sudan'da çatışma ölümleri aylık 36'dan 63'e çıktı. Görünmeyen krizlere ses olalım.",
+   "Yerel Kızılhaç ile birlikte, onurlu ve hesap verebilir gıda desteği. Ayrıntılar ve kaynaklar profilimizde."
+  ],
+  "risks": [
+   "Toplumlar arası çatışma nedeniyle saha güvenliği ve erişim sorunu.",
+   "Sel dönemlerinde lojistik kesintisi.",
+   "Yanlış hedefleme ve yardımın yönlendirilmesi riski; şeffaf seçim kriterleri gerekli.",
+   "Bütçe aralığı ve ülke deneyimi bilinmiyor; ölçek buna göre ayarlanmalı."
+  ],
+  "kpis": [
+   "Desteğe ulaşan hane sayısı (cinsiyet ve yaş kırılımlı)",
+   "Hane gıda tüketim skoru değişimi",
+   "Sağlık birimine yönlendirilen kişi sayısı",
+   "Şikâyetlerin kapanma oranı"
+  ],
+  "sources": [
+   "http://www.africanews.com/2026/10/14/rival-communities-clashes-in-south-sudans-lakes-state-leaves-scores-dead/"
+  ]
+ }
+}

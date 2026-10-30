@@ -1,0 +1,67 @@
+{
+ "iso3": "PSE",
+ "lang": "tr",
+ "engine": "claude-opus-5-5 (Claude Code)",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "note": "Written by Claude Opus 5.5 in a Claude Code session with the app's SYSTEM prompt and FACTS (src/campaign.py), because the free DeepSeek quota was used up.",
+ "campaign": {
+  "title": "Filistin: Abluka Altında Gıda ve Sağlık Desteği ile Görünürlük Kampanyası",
+  "summary": "Gazze Sağlık Bakanlığı verisine göre (Tech for Palestine üzerinden) toplam 74.570 kişi öldü; bunların 20.179'u çocuk. 463 kişi açlıktan öldü, yardım beklerken 2615 kişi öldürüldü. Kâğıt üzerindeki yardım bütçeleri yüksek görünse de abluka nedeniyle yardım içeri girmiyor. Test STK'nın sağlık ve gıda güvenliği ihtiyaç skorları en üst düzeyde (1,0). Batı medyası haberleri olsa da, ihtiyaca göre beklenen ilginin altında kalıyor. Öneri: Palestine Red Crescent Society ile ortaklık ve erişim engelini görünür kılan savunuculuk.",
+  "why_now": [
+   "Son 30 günde 547 kişi öldürüldü (Gazze Sağlık Bakanlığı, 2026-10-29 güncellemesi).",
+   "463 açlık ölümü, bunların 157'si çocuk.",
+   "Batı Şeria'da 1129 ölüm, 5003 yerleşimci saldırısı ve 10.028 yerinden edilmiş kişi kayıtlı.",
+   "Bağımsız medyada 170, Batı medyasında 11 haber: ihtiyaçla orantılı değil."
+  ],
+  "where": "Gazze ve Batı Şeria. Erişim abluka nedeniyle çok kısıtlı; yardımın yalnızca girişi doğrulanmış kanallardan planlanması gerekir.",
+  "mode": "partnership",
+  "target_groups": [
+   "Açlık riski altındaki aileler ve çocuklar",
+   "Yaralılar ve kronik hastalar",
+   "Batı Şeria'da yerinden edilmiş aileler"
+  ],
+  "activities": [
+   {
+    "name": "Ortak üzerinden tıbbi malzeme ve gıda",
+    "description": "Palestine Red Crescent Society'nin erişebildiği kanallarla; giriş garantisi olmayan alımlar yapılmaz."
+   },
+   {
+    "name": "Batı Şeria'da yerinden edilmiş ailelere destek",
+    "description": "Nakit veya temel ihtiyaç desteği, ortağın değerlendirmesine göre."
+   },
+   {
+    "name": "Kanıta dayalı savunuculuk",
+    "description": "Açlık ölümleri ve erişim engeli verilerini kaynak göstererek bağışçılara ve kamuoyuna aktarma; onurlu dil, tanınabilir mağdur görseli yok."
+   }
+  ],
+  "partners": [
+   {
+    "name": "Palestine Red Crescent Society",
+    "reason": "IFRC dizininde doğrulanmış; sahada sağlık ve ambulans hizmeti veriyor. Durum tespiti zorunlu."
+   }
+  ],
+  "donor_message": "Gazze'de 463 kişi açlıktan öldü ve yardım beklerken 2615 kişi öldürüldü. Sorun yalnızca para değil, yardımın içeri girememesi. Palestine Red Crescent Society ile erişilebilen kanallardan gıda ve tıbbi destek sağlamak, aynı zamanda bu engeli görünür kılmak için desteğinizi bekliyoruz.",
+  "social_posts": [
+   "Gazze'de 463 açlık ölümü, 157'si çocuk (Gazze Sağlık Bakanlığı). Yardım var ama içeri giremiyor. #Gazze",
+   "Yardım beklerken öldürülen kişi sayısı: 2615. Bu bir erişim krizi.",
+   "Batı Şeria'da 5003 yerleşimci saldırısı kaydedildi. Görmezden gelinen bir kriz daha."
+  ],
+  "risks": [
+   "Abluka: malzemelerin girişinin garanti olmaması.",
+   "Personel ve gönüllü güvenliği; yardım dağıtım noktalarında şiddet.",
+   "Siyasi hassasiyet: tarafsız ve kanıta dayalı dil şart.",
+   "Bütçe ve ülke deneyimi bilinmiyor."
+  ],
+  "kpis": [
+   "Ortağa ulaştırılan ve teslimi doğrulanan malzeme miktarı",
+   "Desteğe ulaşan hane sayısı",
+   "Savunuculuk içeriklerinin erişimi",
+   "Teslim gecikmesi (gün)"
+  ],
+  "sources": [
+   "https://www.middleeasteye.net/live-blog/live-blog-update/palestinians-call-out-engineered-famine-gaza",
+   "https://www.trthaber.com/haber/dunya/bm-gazzedeki-deposunun-israil-hava-saldirilarinda-hasar-gordugunu-belirtti-961677.html"
+  ]
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "iso3": "SOM",
+ "lang": "tr",
+ "engine": "claude-opus-5-5 (Claude Code)",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "note": "Written by Claude Opus 5.5 in a Claude Code session with the app's SYSTEM prompt and FACTS (src/campaign.py), because the free DeepSeek quota was used up.",
+ "campaign": {
+  "title": "Somali: Dünyanın En Ağır Açlık Krizlerinden Birine Gıda Güvenliği Odaklı Destek",
+  "summary": "Somali'nin GHI 2026 puanı 47,0: verideki en yüksek değerlerden biri. UCDP verisine göre son 90 günde 835 çatışma ölümü var ve şiddet kronik. IFRC'nin 'Somalia - Complex Emergency' çağrısı 15.000.000 CHF istiyor, toplamda yalnızca %28,4 fonlu. Batı medyasında son 30 günde hiç haber yok. Test STK'nın gıda güvenliği ihtiyaç skoru 0,8452. Öneri: Somali Red Crescent Society ile, durum tespitinden sonra gıda güvenliği ağırlıklı ortaklık.",
+  "why_now": [
+   "GHI 2026: 47,0 (2018'de 51,1). Hafif iyileşme var ama açlık hâlâ 'endişe verici' eşiğinin çok üstünde.",
+   "UCDP: son üç yılda 10.021 çatışma ölümü; son 12 ayın hepsi ağır geçti.",
+   "IFRC çağrıları %28,4 fonlu; kuraklık, kolera ve böcek istilası için ayrı DREF'ler açılmış.",
+   "Batı medyasında son 30 günde 0 haber."
+  ],
+  "where": "Somali (ülke düzeyi). Kesin bölge verisi yok; kuraklık ve böcek istilası etkilenen tarım alanları ortakla birlikte doğrulanmalı.",
+  "mode": "partnership",
+  "target_groups": [
+   "Kuraklıktan etkilenen kırsal haneler",
+   "Gıda güvencesizliği yaşayan yerinden edilmiş aileler",
+   "Beş yaş altı çocuklu haneler"
+  ],
+  "activities": [
+   {
+    "name": "Nakit veya gıda desteği",
+    "description": "Piyasa analizine göre; mobil para yaygınsa nakit transferi."
+   },
+   {
+    "name": "Geçim kaynağı koruma",
+    "description": "Hayvancılık ve tarımla geçinen hanelere tohum veya hayvan sağlığı desteği, ortağın uzmanlığına göre."
+   },
+   {
+    "name": "Hijyen ve kolera önleme",
+    "description": "IFRC kolera müdahalesiyle uyumlu bilgilendirme ve hijyen malzemesi."
+   }
+  ],
+  "partners": [
+   {
+    "name": "Somali Red Crescent Society",
+    "reason": "IFRC dizininde doğrulanmış; karmaşık acil durum, kuraklık ve kolera çağrılarını yürütüyor. Durum tespiti zorunlu."
+   }
+  ],
+  "donor_message": "Somali'de açlık dünyanın en ağır düzeylerinden birinde (GHI 2026: 47,0) ve son 90 günde 835 kişi çatışmada öldü. Batı medyası ise sessiz, IFRC çağrıları yalnızca %28,4 fonlu. Somali Kızılayı ile birlikte hanelere gıda ve geçim desteği ulaştırmak için katkınızı bekliyoruz.",
+  "social_posts": [
+   "Somali'nin açlık puanı 47,0 (GHI 2026). Son 30 günde Batı medyasında haber sayısı: 0. #Somali #SessizKriz",
+   "Somali'de IFRC çağrıları yalnızca %28,4 fonlu. Kuraklık, kolera, çatışma: üçü bir arada.",
+   "Somali Kızılayı ile birlikte onurlu ve hesap verebilir gıda desteği."
+  ],
+  "risks": [
+   "Silahlı grupların bulunduğu bölgelerde erişim ve personel güvenliği.",
+   "Yardımın yönlendirilmesi riski; üçüncü taraf izleme önerilir.",
+   "Kuraklığın derinleşmesiyle ihtiyacın hızla büyümesi.",
+   "Bütçe ve ülke deneyimi bilinmiyor."
+  ],
+  "kpis": [
+   "Desteğe ulaşan hane sayısı",
+   "Hane gıda tüketim skoru",
+   "Korunan hayvan veya ekili alan",
+   "Şikâyetlerin kapanma oranı"
+  ],
+  "sources": [
+   "http://www.africanews.com/2026/10/15/somalia-announces-parliamentary-and-presidential-elections-for-2027/"
+  ]
+ }
+}

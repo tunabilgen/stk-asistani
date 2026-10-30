@@ -1,0 +1,71 @@
+{
+ "iso3": "SDN",
+ "lang": "en",
+ "engine": "claude-opus-5-5 (Claude Code)",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "note": "Written by Claude Opus 5.5 in a Claude Code session with the app's SYSTEM prompt and FACTS (src/campaign.py), because the free DeepSeek quota was used up.",
+ "campaign": {
+  "title": "Sudan: Health and Food Support for the World's Most Overlooked Crisis",
+  "summary": "Sudan has the largest gap between need and media attention in our data. UCDP records 89,846 conflict deaths in the last three years, 73,961 of them civilians. The Global Hunger Index 2026 score is 42.45 (provisional, alarming). The IFRC Sudan appeal of 50,000,000 CHF is only 37.2% funded. Western outlets published just 2 items in the last 30 days. Recommendation: a partnership with the Sudanese Red Crescent, after due diligence, focused on food security (need score 0.8367) and health (0.7108).",
+  "why_now": [
+   "UCDP: 796 conflict deaths in the last 90 days of data; violence is easing but ongoing.",
+   "GHI rose from 26.0 (2018) to 42.45 (2026, provisional): hunger has clearly worsened.",
+   "The IFRC 'Sudan - Africa Complex Emergency' appeal is only 37.2% funded.",
+   "52 independent but only 2 Western news items in 30 days."
+  ],
+  "where": "Sudan (country level). Independent reports mention Central Darfur and El Fasher; these are context, not verified operation sites.",
+  "mode": "partnership",
+  "target_groups": [
+   "Food-insecure households",
+   "Families with poor access to basic health care",
+   "Communities affected by violence"
+  ],
+  "activities": [
+   {
+    "name": "Needs and protection assessment",
+    "description": "Confirm sites, access and markets with the partner before scaling up."
+   },
+   {
+    "name": "Food or cash assistance",
+    "description": "Based on market analysis; clear, published selection criteria."
+   },
+   {
+    "name": "Basic health access",
+    "description": "Support existing health facilities and referrals rather than building new ones."
+   },
+   {
+    "name": "Feedback and complaints channel",
+    "description": "In local language, following the Core Humanitarian Standard."
+   }
+  ],
+  "partners": [
+   {
+    "name": "Sudanese Red Crescent",
+    "reason": "Verified in the IFRC national societies directory; due diligence required before partnership."
+   }
+  ],
+  "donor_message": "In Sudan, 73,961 civilians have been killed in three years and hunger has worsened sharply (GHI 2026: 42.45). Yet the IFRC appeal is only 37.2% funded and Western media are almost silent. Help us reach families with food and basic health care through the Sudanese Red Crescent.",
+  "social_posts": [
+   "Sudan: 89,846 conflict deaths in 3 years (UCDP). Western news items in the last 30 days: 2. #Sudan #SilentCrisis",
+   "Hunger in Sudan has worsened: the GHI score was 26.0 in 2018 and is 42.45 now. The IFRC appeal is 37.2% funded.",
+   "With the Sudanese Red Crescent: dignified, accountable food and health support."
+  ],
+  "risks": [
+   "Insecurity and access limits; do not commit before access is confirmed.",
+   "Data gaps: provisional GHI value, no verified operation sites.",
+   "Diversion of aid; transparent targeting and complaints mechanism needed.",
+   "Budget and country experience of the NGO are unknown."
+  ],
+  "kpis": [
+   "Households reached (by sex and age)",
+   "Food consumption score change",
+   "People referred to health services",
+   "Share of complaints closed"
+  ],
+  "sources": [
+   "https://www.dabangasudan.org/en/all-news/article/msf-calls-for-stronger-security-measures-to-protect-its-work-in-central-darfur",
+   "https://www.dabangasudan.org/en/all-news/article/sudan-war-yale-report-reveals-el-fashers-devastation-a-year-after-rsf-takeover"
+  ]
+ }
+}

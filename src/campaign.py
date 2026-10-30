@@ -280,10 +280,10 @@ def generate(country, ngo, sectors, mode, events, lang="tr") -> dict:
         saved = _load_draft(iso, lang, ngo_name)
         if saved:
             out, engine = saved["campaign"], f"{saved['engine']} (saved draft, {saved['generated']})"
-            warn = [("LLM şu an erişilemiyor; bu ülke için daha önce aynı LLM'in ürettiği gerçek taslak gösteriliyor. "
-                     "Sayılar bugünkü verilerle yeniden doğrulandı.") if lang == "tr" else
-                    ("The LLM is unreachable right now; showing the real draft the same LLM produced earlier for this "
-                     "country. Numbers are re-checked against today's data.")] + warn[-1:]
+            warn = [(f"LLM şu an erişilemiyor; bu ülke için daha önce {saved['engine']} tarafından aynı talimat ve "
+                     "verilerle yazılmış taslak gösteriliyor. Sayılar bugünkü verilerle yeniden doğrulandı.") if lang == "tr" else
+                    (f"The LLM is unreachable right now; showing a draft written earlier by {saved['engine']} with the "
+                     "same instructions and data. Numbers are re-checked against today's data.")] + warn[-1:]
         else:
             if llm_available():
                 warn.append("All LLMs failed; template used.")

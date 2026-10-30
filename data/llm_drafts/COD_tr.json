@@ -1,0 +1,68 @@
+{
+ "iso3": "COD",
+ "lang": "tr",
+ "engine": "claude-opus-5-5 (Claude Code)",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "note": "Written by Claude Opus 5.5 in a Claude Code session with the app's SYSTEM prompt and FACTS (src/campaign.py), because the free DeepSeek quota was used up.",
+ "campaign": {
+  "title": "Demokratik Kongo: Ebola ve Yerinden Edilme Arasında Gıda ve Sağlık Desteği",
+  "summary": "Demokratik Kongo Cumhuriyeti'nde kriz kronik: UCDP verisine göre son üç yılda 18.073 çatışma ölümü, bunların 11.620'si sivil. GHI 2026 puanı 39,5 (endişe verici). IFRC'nin toplam 47.967.459 CHF'lik çağrıları yalnızca %17,2 fonlu. Ebola salgını haberleri ve yerinden edilme sürüyor; Batı medyasında son 30 günde sadece 2 haber var. Öneri: Red Cross of the Democratic Republic of the Congo ile ortaklık; gıda güvenliği (ihtiyaç skoru 0,7087) öncelikli, sağlıkta salgın önleme desteği.",
+  "why_now": [
+   "IFRC 'DR Congo - Population Movement' çağrısı 30.000.000 CHF istiyor, çok düşük fonlu.",
+   "IFRC 'DRC - Ebola outbreak' çağrısı 17.000.000 CHF; komşu ülke sınır kontrollerini artırıyor (Africanews).",
+   "GHI 2018'de 36,6 idi, 2026'da 39,5: açlık kötüleşti.",
+   "Son 30 günde 20 bağımsız ve 2 Batılı haber: ihtiyaçla orantısız bir sessizlik."
+  ],
+  "where": "Demokratik Kongo Cumhuriyeti (ülke düzeyi). Haberler Goma çevresini ve Ebola bölgesini işaret ediyor; hedef bölge ortakla ve güvenlik analiziyle belirlenmeli.",
+  "mode": "partnership",
+  "target_groups": [
+   "Yerinden edilmiş aileler",
+   "Gıda güvencesizliği yaşayan haneler",
+   "Salgın riski olan topluluklar"
+  ],
+  "activities": [
+   {
+    "name": "Gıda desteği",
+    "description": "Yerinden edilmiş hanelere piyasa analizine göre nakit veya ayni gıda."
+   },
+   {
+    "name": "Salgın önleme bilgilendirmesi",
+    "description": "Ortak Kızılhaç'ın mevcut Ebola müdahalesine uyumlu hijyen ve bilgilendirme; tıbbi müdahale yalnızca yetkin kurumlarca."
+   },
+   {
+    "name": "Ortak kapasite desteği",
+    "description": "Gönüllü eğitimi, Do-No-Harm ve PSEA eğitimi."
+   }
+  ],
+  "partners": [
+   {
+    "name": "Red Cross of the Democratic Republic of the Congo",
+    "reason": "IFRC dizininde doğrulanmış; nüfus hareketi ve Ebola çağrılarını yürütüyor. Durum tespiti zorunlu."
+   }
+  ],
+  "donor_message": "Kongo'da son üç yılda 11.620 sivil hayatını kaybetti, açlık kötüleşiyor ve Ebola yeniden görülüyor. Buna rağmen IFRC çağrıları yalnızca %17,2 fonlu ve Batı medyası neredeyse sessiz. Yerel Kızılhaç ile yerinden edilmiş ailelere gıda ve salgın önleme desteği için yanımızda olun.",
+  "social_posts": [
+   "Kongo'da IFRC çağrıları yalnızca %17,2 fonlu. Son 30 günde Batı medyasında 2 haber. #DRC #SessizKriz",
+   "GHI: Kongo'da açlık 2018'de 36,6 idi, 2026'da 39,5. Kriz derinleşiyor, ilgi azalıyor.",
+   "Yerel Kızılhaç ile gıda ve salgın önleme desteği: onurlu, şeffaf, hesap verebilir."
+  ],
+  "risks": [
+   "Doğu bölgelerde silahlı çatışma ve erişim kısıtı.",
+   "Ebola bulaş riski: personel ve gönüllü güvenliği protokolleri şart.",
+   "Fon açığı büyük; küçük bir STK'nın katkısı sınırlı kalabilir, odaklı hedef gerekli.",
+   "Bütçe ve ülke deneyimi bilinmiyor."
+  ],
+  "kpis": [
+   "Gıda desteği alan hane sayısı",
+   "Bilgilendirme oturumlarına katılan kişi sayısı",
+   "Eğitim alan gönüllü sayısı",
+   "Geri bildirimlere yanıt süresi"
+  ],
+  "sources": [
+   "http://www.africanews.com/2026/10/30/car-tightens-border-checks-tightened-as-dr-congos-ebola-cases-rise/",
+   "http://www.africanews.com/2026/10/29/drc-us-sanctions-on-rwanda-draw-mixed-reactions-in-goma/",
+   "http://www.africanews.com/2026/10/29/drc-ebola-clinic-celebrates-departure-of-last-confirmed-cases/"
+  ]
+ }
+}
