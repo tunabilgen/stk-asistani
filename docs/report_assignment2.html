@@ -141,12 +141,25 @@ prompt and facts. Each one is labelled as such in the app and in the README.</p>
 <tr><td>Discuss ranking sensitivity</td><td>First step done (GDELT vs RSS check, section 4); a full sensitivity analysis of the weights is planned for the Assignment 3 report.</td></tr>
 </table>
 
-<h2>8) Limitations and next steps (Assignment 3)</h2>
+<h2>8) Known limitations</h2>
 <ul>
-  <li><b>Framing analysis.</b> Measure <i>how</i> outlets describe crises (are victims named? “died” vs “were killed”? who is quoted?) with an LLM, validated on a hand-labelled set.</li>
-  <li><b>Testing.</b> Persona tests, documentation of wrong, inconsistent or biased outputs and their fixes; full 200-excerpt LLM evaluation.</li>
-  <li><b>Known limitations.</b> The “Western” outlet list is our choice; Turkish and Arabic scores come from machine translations; GDELT geocoding needs correction; the transformer was limited by CPU compute.</li>
+  <li>The list of “Western mainstream” outlets (24 domains) is our choice; a different list could change individual ratios.</li>
+  <li>Turkish and Arabic scores come from machine translations, which are cleaner than real news.</li>
+  <li>GDELT's geocoder misplaces Palestine stories; our URL-based correction fixes only stories whose address names the place.</li>
+  <li>The fine-tuned transformer was limited by CPU compute; the LLM evaluation covers 37 of 200 planned excerpts.</li>
+  <li>No real NGO users have tested the tool yet.</li>
 </ul>
+
+<h2>9) Plan for Assignment 3</h2>
+<table>
+<tr><th style="width:26%">Work package</th><th>What we will do</th><th style="width:20%">Output</th></tr>
+<tr><td><b>Framing analysis</b> (the core research question)</td><td>Beyond <i>how much</i> media cover a crisis, measure <i>how</i>: are victims named or only counted? Active (“were killed by”) or passive (“died”) voice? Who is quoted: officials, aid agencies or affected people? An LLM labels headlines from Western, Turkish and other outlets; we check it against ~100 hand-labelled headlines before trusting it.</td><td>framing scores per outlet group and crisis; accuracy of the LLM labeller</td></tr>
+<tr><td><b>Persona tests</b> (instead of NGO interviews)</td><td>Run fixed scenarios as four users: a small Turkish NGO (health, low budget), an international NGO, a journalist looking for under-reported stories, a donor. Record whether the ranking, country file and campaign draft are useful, correct and understandable for each.</td><td>test protocol and results table</td></tr>
+<tr><td><b>Error and bias audit</b></td><td>Test with varied inputs (languages, sectors, excluded countries, missing data) and document every wrong, inconsistent, biased or misleading output, its cause and the fix.</td><td>error log with before/after</td></tr>
+<tr><td><b>Ranking sensitivity</b></td><td>Change each weight and the outlet list within reasonable ranges and measure how stable the top 10 is (rank correlation, overlap).</td><td>sensitivity figure in the report</td></tr>
+<tr><td><b>Model evaluation</b></td><td>Finish the 200-excerpt LLM comparison; label ~100 real Turkish and Arabic headlines to check the language router on real text.</td><td>updated tables</td></tr>
+<tr><td><b>Final deliverables</b></td><td>Polished repository and README, 3–5 page final report, English presentation and a ~5-minute video.</td><td>submission</td></tr>
+</table>
 
 </body>
 </html>
