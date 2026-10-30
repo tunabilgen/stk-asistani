@@ -18,10 +18,8 @@
 **0:45 – 1:10 · Country file** *(click Sudan → Summary, then the Data tab)*
 > "Each country has a file: why it scores high, the trend, aid per person in need, and a verified local partner from the Red Crescent. Every number comes from an independent source that is named here."
 
-**1:10 – 1:45 · AI drafting** *(click "Generate campaign recommendation", wait, scroll the result)*
-> "Here the LLM — DeepSeek V4.1 Flash — writes a campaign draft. It may only use the facts we give it. A validator then checks every number and partner name; anything not in our data is flagged. A human always approves the final text."
->
-> *(If the LLM is not available, say instead: "Without an LLM the app falls back to a template, so it always works.")*
+**1:10 – 1:45 · AI drafting** *(switch the interface to **TR**, NGO sectors **Health + Food security**, open Sudan, click "Kampanya önerisi oluştur", scroll the result)*
+> "Here the LLM — DeepSeek V4.1 Flash through OpenCode — writes a campaign draft. It may only use the facts we give it. A validator then checks every number and partner name; anything not in our data is flagged. A human always approves the final text. The free model has a daily limit, so when it is unreachable the app shows the last real draft the LLM wrote for this country, clearly labelled, and re-checks its numbers against today's data. Without any draft it falls back to a template, so it always works."
 
 **1:45 – 2:10 · Project ideas** *(Afghanistan → Project ideas → click Herat on the map)*
 > "For each province the tool matches climate, security and project types. In Herat it suggests a saffron and pomegranate cooperative; in Kabul, with recent violence, emergency aid instead."

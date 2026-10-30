@@ -1,0 +1,92 @@
+{
+ "iso3": "SDN",
+ "lang": "tr",
+ "engine": "opencode/deepseek-v4.1-flash-free",
+ "generated": "2026-10-30",
+ "ngo_name": "Test STK",
+ "sectors": [
+  "health",
+  "food"
+ ],
+ "mode": "balanced",
+ "campaign": {
+  "title": "Sudan: Sağlık ve Gıda Güvenliği İçin Yerel Ortaklı, Kanıta Dayalı Kampanya",
+  "summary": "Sudan'da ihtiyaç yüksek, görünürlük düşük. UCDP (Uppsala University) verisine göre son üç yılda 89.846 çatışma ölümü ve 73.961 sivil ölüm kaydedildi; son 90 günde 796 ölüm var. GHI 2026 puanı 42,45 (Concern/Welthungerhilfe; geçici kategori ortası, 35+ endişe verici). IFRC'nin 50 milyon CHF'lik çağrısı %37,2 fonlu. Test STK'nın sağlık ve gıda güvenliği ihtiyaç skorları sırasıyla 0,7108 ve 0,8367. Kampanya, aday yerel ortaklarla ve zorunlu durum tespiti sonrasında, Do-No-Harm ve Core Humanitarian Standard ilkelerine uygun sağlık ve gıda güvenliği desteğine odaklanmalı. Test STK'nın bütçe aralığı, ülke deneyimi ve sahaya mesafesi bilinmiyor.",
+  "why_now": [
+   "UCDP (Uppsala University) verisine göre son üç yılda 89.846 çatışma ölümü ve 73.961 sivil ölüm kaydedildi; son 90 günde 796 ölüm bildirildi. İhtiyaç sürüyor.",
+   "GHI 2026 puanı 42,45 (Concern/Welthungerhilfe; geçici kategori ortası, 35+ endişe verici). GHI 2018 puanı 26,0 idi; açlık riski belirgin biçimde yükseldi.",
+   "IFRC'nin 'Sudan - Africa Complex Emergency' çağrısı 50 milyon CHF talep ediyor; yalnızca %37,2 fonlanmış (18.594.383,1 CHF). Finansman boşluğu büyük.",
+   "Son 30 günde 52 bağımsız ve 2 Batılı haber kaydı var; FACTS, Batı medyasında görmezden gelinme işaretini doğruluyor.",
+   "Şiddet 'easing_ongoing' eğiliminde: aylık ölümler 764 bazdan 276'ya geriledi (oran 0,37), ancak 12 ağır ay kaydı ve süregelen risk var.",
+   "Sağlık ihtiyacı 0,7108, gıda güvenliği ihtiyacı 0,8367 (0-1 ölçeği); her iki sektörde de yanıt alanı var."
+  ],
+  "where": "Sudan (ülke düzeyi). Spesifik operasyon lokasyonu FACTS'te yok. Central Darfur ve El Fasher'e dair bağımsız raporlar yalnızca güvenlik ve koruma bağlamı sunar; hedef saha olarak doğrulanmamıştır.",
+  "mode": "partnership",
+  "target_groups": [
+   "Gıda güvenliği ihtiyacı yüksek nüfus (ihtiyaç skoru 0,8367)",
+   "Sağlık hizmeti ihtiyacı yüksek nüfus (ihtiyaç skoru 0,7108)",
+   "Son üç yılda şiddetten etkilenen topluluklar (UCDP verisi)"
+  ],
+  "activities": [
+   {
+    "name": "İhtiyaç ve koruma değerlendirmesi",
+    "description": "Saha lokasyonları, erişim, piyasa işlevselliği ve koruma riskleri doğrulanmadan ölçek büyütülmemeli; yaş, cinsiyet ve engellilik kırılımlı veri toplanmalı."
+   },
+   {
+    "name": "Temel sağlık hizmetlerine erişim desteği",
+    "description": "Mevcut sağlık yapıları ve yerel ortaklarla koordineli temel sağlık hizmeti, sevk ve sağlık bilgilendirmesi; kapasite ve erişim doğrulaması sonrası."
+   },
+   {
+    "name": "Gıda güvenliği desteği",
+    "description": "Gıda yardımı ve/veya nakit temelli desteğin piyasa ve koruma analizine göre değerlendirilmesi; hedef seçiminde ayrımcılık yapılmaması."
+   },
+   {
+    "name": "Yerel kapasite ve hesap verebilirlik",
+    "description": "Ortak personeline Do-No-Harm, CHS, PSEA ve şikayet mekanizması eğitimi; topluluk geri bildirim kanallarının kurulması."
+   },
+   {
+    "name": "Onurlu görünürlük ve savunuculuk",
+    "description": "Veriye dayalı iletişimle ihtiyaç ve fon açığını görünür kılma; tanımlanabilir mağdur görseli kullanmama ve damgalayıcı dilden kaçınma."
+   }
+  ],
+  "partners": [
+   {
+    "name": "Sudanese Red Crescent",
+    "reason": "IFRC ulusal topluluklar dizininde doğrulanmış aday. Sağlık ve gıda güvenliği yanıtında koordinasyon için öncelikli ortak adayı; ancak ortaklık öncesi durum tespiti, kapasite, tarafsızlık ve hesap verebilirlik incelemesi zorunlu."
+   },
+   {
+    "name": "Sudanese Teachers’ Committee",
+    "reason": "Yalnızca bağımsız haberlerde anıldığı belirtiliyor; kanıt doğrulanmamış. Topluluk temelli iletişim için değerlendirilebilir, ancak rolü ve kapasitesi doğrulanmadan ortaklık kurulmamalı; durum tespiti zorunlu."
+   }
+  ],
+  "donor_message": "Sudan'da UCDP verisine göre son üç yılda 89.846 çatışma ölümü ve 73.961 sivil ölüm kaydedildi. GHI 2026 puanı 42,45; bu geçici bir kategori ortası ve 35 üzeri endişe verici. IFRC'nin 50 milyon CHF'lik çağrısı yalnızca %37,2 fonlanmış. Test STK'nın sağlık ve gıda güvenliği ihtiyaç skorları 0,7108 ve 0,8367. Bütçe aralığı ve ülke deneyimi bilinmiyor. Yerel ortak adaylarıyla, durum tespiti sonrası, koruma odaklı ve kanıta dayalı bir yanıtı desteklemenizi öneriyoruz.",
+  "social_posts": [
+   "Sudan'da UCDP verisine göre son 3 yılda 89.846 çatışma ölümü ve 73.961 sivil ölüm kaydedildi. GHI 2026 puanı 42,45 (geçici). İhtiyaç yüksek, görünürlük düşük. #Sudan",
+   "IFRC'nin Sudan çağrısı 50 milyon CHF; yalnızca %37,2 fonlu. Sağlık ihtiyacı 0,7108, gıda güvenliği 0,8367 (0-1). Yerel ortaklarla yanıt için önce durum tespiti ve koruma analizi şart. #DoNoHarm",
+   "Son 30 günde 52 bağımsız, 2 Batılı haber. Şiddet azalsa da sürüyor: UCDP'ye göre son 90 günde 796 ölüm. Tanımlanabilir mağdur görseli yok; onurlu iletişim ve CHS ilkeleriyle destek çağrısı. #Sudan"
+  ],
+  "risks": [
+   "Güvenlik ve erişim: son 90 günde 796 çatışma ölümü ve 0,5 yakın dönem silahlı şiddet skoru; Central Darfur'da MSF güvenlik tedbiri çağrısı var. Erişim doğrulanmadan taahhüt verilmemeli.",
+   "Veri boşlukları: GHI 42,45 geçici kategori ortası; Test STK bütçe aralığı, ülke deneyimi ve sahaya mesafesi bilinmiyor; operasyon lokasyonu ve canlı olay verisi FACTS'te yok.",
+   "Ortak riski: Sudanese Teachers’ Committee kanıtı doğrulanmamış; tüm adaylar için durum tespiti, tarafsızlık ve kapasite incelemesi gerekli.",
+   "Finansman: IFRC çağrısı %37,2 fonlu; kaynak kıtlığı hizmet ölçeğini sınırlayabilir.",
+   "Koruma ve itibar: görünürlük kampanyasında damgalama, abartı veya tanımlanabilir mağdur görseli kullanımı zarar verebilir; Do-No-Harm ve CHS gereği onurlu dil ve bilgilendirilmiş rıza sağlanmalı.",
+   "Yardımın yönlendirilmesi ve suistimal: nakit veya gıda dağıtımında hedefleme ve şikayet mekanizması zayıfsa dışlanma ve suistimal riski oluşabilir."
+  ],
+  "kpis": [
+   "Durum tespiti tamamlanan ortak adayı sayısı",
+   "Yaş, cinsiyet ve engellilik kırılımlı ulaşılan kişi sayısı",
+   "Temel sağlık hizmetine erişen kişi sayısı",
+   "Gıda güvenliği desteği alan hane sayısı",
+   "Şikayet ve geri bildirimlerin kapatılma oranı ve ortalama süresi",
+   "Fon kullanım oranı ve raporların zamanında teslim oranı"
+  ],
+  "sources": [
+   "http://en.yenisafak.com/world/egypt-us-officials-discuss-sudan-war-and-libya-peace-efforts-3724967",
+   "https://www.dabangasudan.org/en/all-news/article/msf-calls-for-stronger-security-measures-to-protect-its-work-in-central-darfur",
+   "https://www.dabangasudan.org/en/all-news/article/sudan-war-yale-report-reveals-el-fashers-devastation-a-year-after-rsf-takeover",
+   "https://www.dabangasudan.org/en/all-news/article/sudan-accuses-ethiopia-of-launching-162-drone-attacks-from-its-territory",
+   "https://www.dabangasudan.org/en/all-news/article/wars-scars-and-hope-for-healing-sudanese-stories-through-the-art-of-amani-azhari"
+  ]
+ }
+}

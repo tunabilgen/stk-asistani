@@ -18,7 +18,9 @@ import tempfile
 import requests
 
 from src.config import (LLM_API_KEY, LLM_BASE_URL, LLM_ENGINE, LLM_FALLBACK_MODELS, LLM_MODEL, OPENCODE_MODEL,
-                        SECTORS, USER_AGENT)
+                        ROOT, SECTORS, USER_AGENT)
+
+DRAFTS = ROOT / "data" / "llm_drafts"  # last real LLM campaign per country+language, shown if the LLM is unreachable
 
 # OpenCode is a coding agent; for pure text generation every tool is switched off and it runs in an
 # empty temporary folder, so the model cannot read or change any file.
@@ -236,6 +238,27 @@ def template(facts: dict, lang: str) -> dict:
     }
 
 
+def _save_draft(iso3, lang, engine, facts, out):
+    try:
+        DRAFTS.mkdir(parents=True, exist_ok=True)
+        rec = {"iso3": iso3, "lang": lang, "engine": engine, "generated": str(__import__("datetime").date.today()),
+               "ngo_name": facts.get("ngo", {}).get("name"), "campaign": out}
+        (DRAFTS / f"{iso3}_{lang}.json").write_text(json.dumps(rec, ensure_ascii=False, indent=1), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _load_draft(iso3, lang, ngo_name):
+    f = DRAFTS / f"{iso3}_{lang}.json"
+    if not f.exists():
+        return None
+    rec = json.loads(f.read_text(encoding="utf-8"))
+    old = rec.get("ngo_name")
+    if old and ngo_name and old != ngo_name:  # the draft names the NGO it was written for
+        rec["campaign"] = json.loads(json.dumps(rec["campaign"], ensure_ascii=False).replace(old, ngo_name))
+    return rec
+
+
 def generate(country, ngo, sectors, mode, events, lang="tr") -> dict:
     facts = build_facts(country, ngo, sectors, mode, events)
     engine, warn = "template", []
@@ -248,12 +271,23 @@ def generate(country, ngo, sectors, mode, events, lang="tr") -> dict:
                 break
             except Exception as e:
                 warn.append(f"{model} unavailable ({type(e).__name__}: {str(e)[:100]})")
-        if out is None:
-            warn.append("All LLMs failed; template used.")
-            out = template(facts, lang)
     else:
         warn.append(NO_LLM)
-        out = template(facts, lang)
+    iso, ngo_name = facts.get("iso3"), (ngo or {}).get("name") or ""
+    if engine != "template":
+        _save_draft(iso, lang, engine, facts, out)
+    else:
+        saved = _load_draft(iso, lang, ngo_name)
+        if saved:
+            out, engine = saved["campaign"], f"{saved['engine']} (saved draft, {saved['generated']})"
+            warn = [("LLM şu an erişilemiyor; bu ülke için daha önce aynı LLM'in ürettiği gerçek taslak gösteriliyor. "
+                     "Sayılar bugünkü verilerle yeniden doğrulandı.") if lang == "tr" else
+                    ("The LLM is unreachable right now; showing the real draft the same LLM produced earlier for this "
+                     "country. Numbers are re-checked against today's data.")] + warn[-1:]
+        else:
+            if llm_available():
+                warn.append("All LLMs failed; template used.")
+            out = template(facts, lang)
     warn += validate(out, facts)
     return {"campaign": out, "engine": engine, "warnings": warn, "facts": facts}
 
