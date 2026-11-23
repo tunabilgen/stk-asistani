@@ -264,7 +264,7 @@ For a daily refresh run `python update.py`; add `--full` once a week.
 * **Western-attention metric.** Since Assignment 2 it comes from GDELT (24 Western outlets, 30 days). The list of "Western" outlets is our choice and is listed in `src/sources/gdelt.py`; the coverage ratio is an indicator, not a verdict.
 * **Geocoder bias.** GDELT places most Gaza stories in Israel. We re-attribute stories by the place named in the URL, with the same rule for every country.
 * **Gazetteer tagging.** Demonyms are used only when no place is named, so reports are attributed to the place where people are affected. A known limitation: "Afghan returnees from Pakistan" is tagged as Pakistan only.
-* **Language bias.** The classifier is weaker on Spanish (macro-F1 0.62). Turkish and Arabic go to a multilingual model (micro-F1 ≈ 0.70, measured on machine translations). We report per-language F1.
+* **Language bias.** The classifier is weaker on Spanish (macro-F1 0.62). Turkish and Arabic go to a multilingual model (micro-F1 ≈ 0.70, measured on machine translations). No Arabic-language news source is collected yet; that is planned for Assignment 3. We report per-language F1.
 * **Self-training drift.** Pseudo-labels are capped and require high confidence; an F1 guard applies; human corrections win.
 * **Hallucination.** The LLM is fact-restricted and its output validated; a human must approve every campaign.
 * **NGO country policy.** The profile has an *excluded countries* setting (default: Israel, the project team's choice). Excluded countries are shown grey with the label "out of scope by NGO policy". The underlying data is not altered, so the choice stays transparent.
