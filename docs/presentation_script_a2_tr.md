@@ -40,7 +40,7 @@ Aynı 12 bin test metninde yedi yaklaşım denedik. Basit doğrusal modeller en 
 Prototip gerçek veriyle baştan sona çalışıyor: veri topluyor, haberleri sınıflandırıyor, krizleri sessizliğe göre sıralıyor, ülke dosyasını açıyor ve kampanya taslağı yazıyor. LLM sadece bizim doğrulanmış verimizi kullanabiliyor, bir doğrulayıcı her sayıyı kontrol ediyor, her taslak hangi modelin yazdığını gösteriyor. Son onayı her zaman bir insan veriyor.
 
 **11 · Açık kalanlar**
-Bazı şeyler hâlâ açık. STK görüşmesi yapamadık; persona testi yapacağız ve bunu daha zayıf bir yöntem olarak adlandıracağız. Türkçe/Arapça testlerimiz çeviriye dayanıyor. Batı medyası listesi bizim seçimimiz. 3. ödevdeki ana sorumuz çerçeveleme: medya bir krize ne kadar değil, nasıl yer veriyor? Kurbanların adı geçiyor mu? Başlık "öldü" mü diyor, "öldürüldü" mü? Kime söz veriliyor?
+Bazı şeyler hâlâ açık. STK görüşmesi yapamadık; persona testi yapacağız ve bunu daha zayıf bir yöntem olarak adlandıracağız. Türkçe/Arapça testlerimiz çeviriye dayanıyor. Uygulama Arapça okuyabiliyor ama henüz Arapça haber kaynağımız yok; 3. ödevde ekleyeceğiz. Batı medyası listesi bizim seçimimiz. 3. ödevdeki ana sorumuz çerçeveleme: medya bir krize ne kadar değil, nasıl yer veriyor? Kurbanların adı geçiyor mu? Başlık "öldü" mü diyor, "öldürüldü" mü? Kime söz veriliyor?
 
 **12 · Kapanış**
 Tek cümleyle: insani yardım sistemi medyanın görmezden geldiği krizlerin çoğunu hâlâ görüyor, ama dört kriz iki kere sessiz: Madagaskar, Timor-Leste, Nijer ve Burundi. Küçük bir STK'nın görünürlük açısından en çok fark yaratabileceği yerler burası. Teşekkürler, sorularınızı alabiliriz.
