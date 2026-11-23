@@ -67,6 +67,7 @@ whether rare sectors (logistics, agriculture) also work. We also report F1 per l
 <tr><td>5</td><td>Multilingual sentence embeddings (frozen MiniLM) + LogReg</td><td class="n">0.737</td><td class="n">0.696</td><td><b>used in the app</b> for TR/AR</td></tr>
 <tr><td>6</td><td>Fine-tuned multilingual MiniLM transformer</td><td class="n">0.413</td><td class="n">0.422</td><td>laptop CPU: 12k excerpts, 2 epochs, 73 min</td></tr>
 <tr><td>7</td><td>LLM zero-shot, DeepSeek V4.1 Flash</td><td class="n">0.818</td><td class="n">0.717</td><td>preliminary: 37 excerpts; model 4 on the same 37: 0.718 / 0.594</td></tr>
+<tr><td>7b</td><td>LLM zero-shot, Claude Opus 5.5</td><td class="n">0.799</td><td class="n">0.732</td><td>all 200 excerpts; model 4 on the same 200: 0.784 / 0.701</td></tr>
 </table>
 <figure><img src="../reports/figures/model_comparison.png" style="width:80%"><figcaption>Fig. 2 — Models 1–6 on the full HumSet test set (12,384 excerpts).</figcaption></figure>
 <p><b>Which performed better and why.</b> The linear models (SVM 0.781, logistic regression 0.780) were best on the full test set.
@@ -77,7 +78,9 @@ logistic regression instead of SVM because it gives probabilities, which the das
 budget, not the method</b>: on a laptop CPU we could train on only 10% of the data for 2 epochs, and the loss was still falling; we report
 this negative result instead of hiding it. The LLM, with no training at all, beat our model by about 10 points on the same 37 excerpts,
 but the free model hit its daily usage limit after 37 calls, so this is preliminary; the run resumes from its cache and the full 200
-will be reported in Assignment 3. Even if the LLM is more accurate, it is too slow and rate-limited to label thousands of news items a day,
+will be reported in Assignment 3. To finish the test, Claude Opus 5.5 labelled the same 200 excerpts with the same definitions, without seeing the true labels:
+micro-F1 0.799 vs 0.784 for our model on the same 200 (macro 0.732 vs 0.701). The 10-point lead seen on 37 excerpts shrinks to 1.5–3 points
+on 200, a lesson about small samples; the LLM helps most on Spanish (0.89 vs 0.77). Even if the LLM is more accurate, it is too slow and rate-limited to label thousands of news items a day,
 so the app uses it only for writing campaign drafts, where a human checks the output.</p>
 
 <h2>3) Turkish and Arabic</h2>

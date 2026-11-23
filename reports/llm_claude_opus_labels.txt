@@ -1,0 +1,200 @@
+0 health
+1 food
+2 wash
+3 agriculture livelihoods
+4 shelter protection
+5 health
+6 health logistics
+7 protection
+8 wash
+9 -
+10 health
+11 livelihoods
+12 protection
+13 nutrition
+14 nutrition health
+15 protection
+16 wash
+17 health
+18 agriculture livelihoods
+19 livelihoods
+20 shelter
+21 shelter livelihoods
+22 protection
+23 protection
+24 education health
+25 protection
+26 food nutrition livelihoods protection
+27 protection
+28 food education
+29 health
+30 -
+31 shelter
+32 health
+33 health
+34 health
+35 food
+36 education health
+37 shelter
+38 education
+39 wash
+40 logistics protection
+41 protection
+42 livelihoods
+43 health
+44 education
+45 protection education
+46 protection
+47 food
+48 health shelter
+49 protection food
+50 protection
+51 wash
+52 livelihoods shelter
+53 logistics food
+54 livelihoods
+55 nutrition
+56 protection
+57 livelihoods protection
+58 education
+59 wash
+60 protection
+61 shelter wash food protection
+62 health
+63 food livelihoods
+64 health nutrition
+65 health
+66 protection health
+67 food
+68 shelter
+69 health
+70 livelihoods
+71 wash
+72 -
+73 health
+74 shelter
+75 agriculture shelter
+76 protection agriculture
+77 protection
+78 protection
+79 health
+80 wash
+81 protection
+82 protection
+83 protection
+84 health
+85 food
+86 protection
+87 livelihoods
+88 health protection
+89 wash food
+90 nutrition
+91 -
+92 education protection
+93 livelihoods protection
+94 wash health
+95 health
+96 health
+97 wash
+98 food agriculture
+99 livelihoods
+100 protection
+101 food
+102 food livelihoods
+103 health protection
+104 -
+105 food protection
+106 logistics
+107 protection
+108 protection
+109 wash
+110 livelihoods protection
+111 education
+112 health wash
+113 protection
+114 nutrition
+115 livelihoods protection
+116 health
+117 nutrition health
+118 health education
+119 livelihoods
+120 health
+121 health
+122 protection
+123 health
+124 health
+125 health
+126 livelihoods
+127 shelter
+128 shelter wash
+129 education
+130 food logistics
+131 health
+132 protection
+133 shelter
+134 health
+135 health protection
+136 protection
+137 nutrition
+138 protection
+139 food shelter wash health protection
+140 wash
+141 health
+142 -
+143 livelihoods
+144 education protection
+145 protection education
+146 education
+147 health
+148 food
+149 protection health
+150 health livelihoods
+151 wash health
+152 protection
+153 education protection
+154 protection
+155 food livelihoods
+156 livelihoods protection
+157 health
+158 shelter livelihoods
+159 health
+160 wash
+161 protection
+162 health nutrition
+163 protection
+164 shelter
+165 protection
+166 protection
+167 livelihoods
+168 protection
+169 livelihoods food
+170 wash logistics
+171 education
+172 health wash
+173 health
+174 health wash food
+175 wash protection
+176 food shelter wash livelihoods
+177 food
+178 health
+179 food
+180 protection
+181 protection shelter
+182 food
+183 livelihoods
+184 protection
+185 agriculture livelihoods
+186 food agriculture
+187 protection
+188 food
+189 -
+190 livelihoods
+191 protection
+192 protection
+193 health
+194 agriculture livelihoods
+195 health
+196 protection food
+197 food
+198 protection livelihoods
+199 food livelihoods

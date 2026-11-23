@@ -132,6 +132,7 @@ sectors equally, so it shows whether rare sectors (logistics, agriculture) also 
 | 5 | multilingual sentence embeddings (frozen MiniLM) + LogReg | 0.737 | 0.696 | **used in the app** (TR/AR) |
 | 6 | fine-tuned multilingual MiniLM | 0.413 | 0.422 | CPU only: 12k excerpts, 2 epochs, 73 min |
 | 7 | LLM zero-shot (DeepSeek V4.1 Flash, free) | 0.818 | 0.717 | **preliminary, 37 excerpts** (free-tier limit); model 4 on the same 37: 0.718 / 0.594 |
+| 7b | LLM zero-shot (Claude Opus 5.5) | 0.799 | 0.732 | **all 200 excerpts**; model 4 on the same 200: 0.784 / 0.701; on DeepSeek's 37: 0.847 / 0.725 |
 
 ![model comparison](reports/figures/model_comparison.png)
 
@@ -142,6 +143,14 @@ probabilities, which the dashboard and the self-training step need. The frozen s
 because it compresses each excerpt into one 384-number vector. The fine-tuned transformer did badly **because of our
 compute budget, not the method**: on a laptop CPU we could only train on 10% of the data for 2 epochs, and the loss was still
 falling. We report it as a negative result instead of hiding it.
+
+**The LLM, on all 200 (Claude Opus 5.5).** To finish the test without the DeepSeek quota, Claude Opus 5.5 labelled the
+same 200 excerpts with the same sector definitions, in a Claude Code session, without seeing the true labels
+([labels](reports/llm_claude_opus_labels.txt), [scores](reports/llm_claude_opus_eval.json)). Result: micro-F1 0.799 vs 0.784 for
+our TF-IDF model on the same 200, macro-F1 0.732 vs 0.701. So the large lead seen on 37 excerpts **shrinks to 1.5–3 points** on 200:
+a useful lesson about small samples. The LLM helps most on Spanish (0.89 vs 0.77), the weakest language of our model. On DeepSeek's
+37 excerpts the two LLMs are close (Claude 0.847, DeepSeek 0.818). Caveat: this was one labelling pass by the model inside a chat
+session, not a scripted API run.
 
 **The LLM.** On the first 37 test excerpts (the free OpenCode model stopped with a usage limit after that), the LLM with no
 training beat our model on the same excerpts by about 10 points (micro-F1 0.82 vs 0.72). 37 is too few to be sure; the run
