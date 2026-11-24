@@ -11,7 +11,7 @@ Approaches (all multi-label, 10 sectors, evaluated on the official HumSet test s
 
 Every learned model gets per-class thresholds tuned on the validation split (same rule for all).
 
-Usage:  python -m src.compare_models classic | embed | finetune | llm | report
+Usage:  python -m src.compare_models classic | embed | finetune | llm | report | confusion
 Results accumulate in reports/model_comparison.json.
 """
 import json
@@ -261,5 +261,29 @@ def report():
     print("saved", FIGURES / "model_comparison.png")
 
 
+def confusion():
+    """One 2x2 confusion matrix per sector for the app's model (multi-label: each sector is its own yes/no)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import multilabel_confusion_matrix
+    from src.sector_model import load
+    tr, va, te, ytr, yva, yte = _data()
+    m = load()
+    yhat = (m["clf"].predict_proba(m["vec"].transform(te["text"])) >= m["thresholds"]).astype(int)
+    cms = multilabel_confusion_matrix(yte, yhat)
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6.4))
+    for ax, k, cm in zip(axes.flat, LABELS, cms):
+        ax.imshow(cm / cm.sum(), cmap="Reds", vmin=0, vmax=0.6)
+        for (i, j), v in np.ndenumerate(cm):
+            ax.text(j, i, f"{v:,}", ha="center", va="center", fontsize=11, color="white" if v / cm.sum() > 0.35 else "#1F1D1B")
+        p, r = cm[1, 1] / max(1, cm[:, 1].sum()), cm[1, 1] / max(1, cm[1].sum())
+        ax.set_title(f"{k}\nprecision {p:.2f} · recall {r:.2f}", fontsize=10)
+        ax.set_xticks([0, 1], ["pred. no", "pred. yes"], fontsize=9); ax.set_yticks([0, 1], ["true no", "true yes"], fontsize=9)
+    fig.suptitle(f"TF-IDF + logistic regression, HumSet test set ({len(te):,} excerpts): one 2×2 matrix per sector", fontsize=12)
+    fig.tight_layout(); fig.savefig(FIGURES / "confusion_per_sector.png", dpi=160)
+    print("saved", FIGURES / "confusion_per_sector.png")
+
+
 if __name__ == "__main__":
-    {"classic": classic, "embed": embed, "finetune": finetune, "llm": llm, "report": report}[sys.argv[1]]()
+    {"classic": classic, "embed": embed, "finetune": finetune, "llm": llm, "report": report, "confusion": confusion}[sys.argv[1]]()

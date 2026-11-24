@@ -136,6 +136,10 @@ sectors equally, so it shows whether rare sectors (logistics, agriculture) also 
 
 ![model comparison](reports/figures/model_comparison.png)
 
+**Errors per sector.** The task is multi-label, so each sector gets its own 2×2 confusion matrix (`python -m src.compare_models confusion`). Health and education are strong (precision and recall > 0.8); logistics (0.53 / 0.50) and agriculture (0.63 / 0.57), the rarest sectors, are weakest.
+
+![confusion per sector](reports/figures/confusion_per_sector.png)
+
 **Why the linear models win here.** HumSet excerpts are long and full of sector words (*cholera, latrine, school*), so word
 n-grams already carry most of the signal; with 100k+ labelled training excerpts a linear model learns them well and
 retrains in about a minute. SVM and logistic regression are tied (0.781 vs 0.780); we keep logistic regression because it gives

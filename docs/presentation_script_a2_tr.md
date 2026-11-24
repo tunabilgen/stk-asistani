@@ -1,7 +1,7 @@
 # 2. Ödev sunumu — konuşma metni (Türkçe, ~8 dakika)
 
 Slaytlar İngilizce. İngilizce konuşma notları her slaytın altında (sunum modunda "notes").
-Bölüşüm: **Ufuk 1–6**, **Tuna 7–12**. Her slayt ortalama 40 saniye.
+Bölüşüm: **Ufuk 1–6**, **Tuna 7–13**. Her slayt ortalama 40 saniye.
 
 ---
 
@@ -36,11 +36,14 @@ Modeli Türkçe ve Arapça test etmemizi istediniz. Eğitim verimizde bu diller 
 **9 · Yedi model**
 Aynı 12 bin test metninde yedi yaklaşım denedik. Basit doğrusal modeller en iyisiydi ve bir dakikada yeniden eğitiliyor. Transformer'ı laptop işlemcisinde eğitmek yetmedi; bunu dürüstçe raporluyoruz. LLM tarafında DeepSeek OpenCode üzerinden çalıştı ama ücretsiz kota 37 metinde bitti; orada 10 puan öndeydi. Testi Claude ile 200 metne tamamladık: fark 1,5 puana düştü. Ders: küçük örnek yanıltır. LLM günde binlerce haber için de çok yavaş, bu yüzden sadece kampanya taslağı yazdırıyoruz.
 
-**10 · Prototip**
+**10 · Sektör bazlı hatalar (2×2 confusion matrix)**
+Bir metin birden fazla sektöre ait olabildiği için tek büyük bir confusion matrix çizemiyoruz. Bunun yerine her sektör için ayrı bir 2×2 tablo var: gerçekte evet/hayır, model evet/hayır dedi. Sağlık ve eğitim güçlü, precision ve recall 0,8'in üstünde. Zayıf olanlar lojistik ve tarım, 0,5–0,6 civarı. Bunlar eğitim verisinde en az bulunan sektörler; macro-F1'in micro-F1'den düşük olmasının sebebi de bu.
+
+**11 · Prototip**
 Prototip gerçek veriyle baştan sona çalışıyor: veri topluyor, haberleri sınıflandırıyor, krizleri sessizliğe göre sıralıyor, ülke dosyasını açıyor ve kampanya taslağı yazıyor. LLM sadece bizim doğrulanmış verimizi kullanabiliyor, bir doğrulayıcı her sayıyı kontrol ediyor, her taslak hangi modelin yazdığını gösteriyor. Son onayı her zaman bir insan veriyor.
 
-**11 · Açık kalanlar**
+**12 · Açık kalanlar**
 Bazı şeyler hâlâ açık. STK görüşmesi yapamadık; persona testi yapacağız ve bunu daha zayıf bir yöntem olarak adlandıracağız. Türkçe/Arapça testlerimiz çeviriye dayanıyor. Uygulama Arapça okuyabiliyor ama henüz Arapça haber kaynağımız yok; 3. ödevde ekleyeceğiz. Batı medyası listesi bizim seçimimiz. 3. ödevdeki ana sorumuz çerçeveleme: medya bir krize ne kadar değil, nasıl yer veriyor? Kurbanların adı geçiyor mu? Başlık "öldü" mü diyor, "öldürüldü" mü? Kime söz veriliyor?
 
-**12 · Kapanış**
+**13 · Kapanış**
 Tek cümleyle: insani yardım sistemi medyanın görmezden geldiği krizlerin çoğunu hâlâ görüyor, ama dört kriz iki kere sessiz: Madagaskar, Timor-Leste, Nijer ve Burundi. Küçük bir STK'nın görünürlük açısından en çok fark yaratabileceği yerler burası. Teşekkürler, sorularınızı alabiliriz.
